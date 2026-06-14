@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BharatVoice AI - Government Schemes in Your Language</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #1B6B3A;
+            --secondary: #F5F5F0;
+            --accent: #FF9933;
+            --dark: #1A1A2E;
+            --success: #28A745;
+            --light-gray: #F8F9FA;
+            --border-gray: #E9ECEF;
+            --text-dark: #2C3E50;
+            --text-light: #666;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-dark); background-color: var(--secondary); line-height: 1.6; }
+        .navbar { background: var(--primary); color: white; padding: 0.8rem 1.5rem; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .navbar-left { display: flex; align-items: center; gap: 2rem; }
+        .logo { font-size: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+        .nav-link { color: white; cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: 0.3s ease; padding: 0.5rem 0; border-bottom: 2px solid transparent; }
+        .nav-link:hover, .nav-link.active { border-bottom-color: var(--accent); }
+        .navbar-right { display: flex; align-items: center; gap: 1.5rem; }
+        .language-selector { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: 0.3s ease; }
+        .language-selector option { color: black; background: white; }
+        .hamburger { display: none; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+        .page-container { margin-top: 60px; min-height: calc(100vh - 60px); }
+        .page { display: none; animation: fadeIn 0.5s ease-in-out; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .hero { background: linear-gradient(135deg, var(--primary) 0%, #0f4c2a 100%); color: white; padding: 4rem 2rem; text-align: center; min-height: 500px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 0.5rem; font-weight: 800; }
+        .hero .tagline { font-size: 1.5rem; margin-bottom: 0.3rem; font-weight: 600; }
+        .hero .subtitle { font-size: 1rem; opacity: 0.9; margin-bottom: 1rem; }
+        .hero .description { font-size: 1.1rem; max-width: 600px; margin-bottom: 2rem; opacity: 0.95; line-height: 1.8; }
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
+        .btn { padding: 0.9rem 2rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.3s ease; display: inline-block; text-align: center; }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(255,153,51,0.3); }
+        .btn-secondary { background: white; color: var(--primary); }
+        .btn-secondary:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; padding: 3rem 2rem; background: var(--light-gray); text-align: center; }
+        .stat { padding: 1.5rem; }
+        .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem; }
+        .stat-label { font-size: 0.95rem; color: var(--text-light); font-weight: 500; }
+        .features-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; padding: 3rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .feature-card { background: white; padding: 2rem; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: 0.3s ease; }
+        .feature-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+        .feature-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .feature-card h3 { color: var(--primary); margin-bottom: 0.8rem; }
+        .feature-card p { color: var(--text-light); font-size: 0.95rem; }
+        .how-it-works { padding: 3rem 2rem; background: white; }
+        .how-it-works h2 { text-align: center; color: var(--primary); margin-bottom: 2rem; font-size: 2rem; }
+        .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; max-width: 1000px; margin: 0 auto; }
+        .step { text-align: center; padding: 1.5rem; }
+        .step-number { background: var(--primary); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; margin: 0 auto 1rem; }
+        .step h4 { color: var(--primary); margin-bottom: 0.5rem; }
+        .testimonials { padding: 3rem 2rem; background: var(--light-gray); }
+        .testimonials h2 { text-align: center; color: var(--primary); margin-bottom: 2rem; font-size: 2rem; }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; max-width: 1000px; margin: 0 auto; }
+        .testimonial { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .testimonial p { color: var(--text-light); margin-bottom: 1rem; font-style: italic; }
+        .testimonial-author { font-weight: 600; color: var(--primary); font-size: 0.9rem; }
+        .testimonial-location { font-size: 0.85rem; color: var(--text-light); }
+        footer { background: var(--dark); color: white; padding: 2rem; text-align: center; }
+        .footer-links { margin-bottom: 1rem; }
+        .footer-links a { color: var(--accent); text-decoration: none; margin: 0 1rem; font-size: 0.9rem; }
+        .chat-container { display: flex; flex-direction: column; height: calc(100vh - 60px); background: white; }
+        .chat-header { background: var(--primary); color: white; padding: 1rem; display: flex; align-items: center; gap: 1rem; }
+        .chat-header-title { flex: 1; }
+        .chat-header h2 { font-size: 1.1rem; margin-bottom: 0.2rem; }
+        .online-status { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
+        .status-dot { width: 10px; height: 10px; background: #28A745; border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .messages-container { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+        .message { display: flex; gap: 0.5rem; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .message.user { justify-content: flex-end; }
+        .message-bubble { max-width: 70%; padding: 0.8rem 1.2rem; border-radius: 12px; word-wrap: break-word; }
+        .message.user .message-bubble { background: var(--primary); color: white; border-radius: 18px 18px 4px 18px; }
+        .message.ai .message-bubble { background: var(--light-gray); color: var(--text-dark); border-radius: 18px 18px 18px 4px; display: flex; gap: 0.8rem; align-items: flex-start; }
+        .ai-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: 0.2rem; }
+        .message-content { flex: 1; }
+        .speaker-btn { background: none; border: none; color: var(--primary); cursor: pointer; font-size: 1.2rem; margin-top: 0.5rem; }
+        .message-time { font-size: 0.75rem; color: var(--text-light); margin-top: 0.3rem; }
+        .typing-indicator { display: flex; gap: 0.4rem; align-items: center; padding: 0.5rem; }
+        .typing-dot { width: 8px; height: 8px; background: var(--text-light); border-radius: 50%; animation: typing 1.4s infinite; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-10px); } }
+        .suggested-chips { display: flex; flex-wrap: wrap; gap: 0.8rem; padding: 1rem 0; }
+        .chip { background: var(--light-gray); border: 1px solid var(--border-gray); padding: 0.6rem 1.2rem; border-radius: 20px; cursor: pointer; font-size: 0.9rem; transition: 0.3s ease; }
+        .chip:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        .chat-input-area { border-top: 1px solid var(--border-gray); padding: 1rem; display: flex; gap: 0.8rem; align-items: center; background: white; }
+        .chat-input { flex: 1; border: 1px solid var(--border-gray); padding: 0.8rem 1.2rem; border-radius: 24px; font-size: 0.95rem; outline: none; }
+        .chat-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(27,107,58,0.1); }
+        .voice-btn { background: white; border: 2px solid var(--primary); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.3s ease; }
+        .voice-btn:hover { background: var(--primary); color: white; }
+        .voice-btn.listening { background: #d32f2f; border-color: #d32f2f; color: white; animation: pulse 0.6s infinite; }
+        .send-btn { background: var(--primary); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.3s ease; }
+        .send-btn:hover:not(:disabled) { background: #0f4c2a; }
+        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .schemes-container { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+        .schemes-header { margin-bottom: 2rem; }
+        .schemes-header h1 { color: var(--primary); margin-bottom: 0.5rem; }
+        .search-input { width: 100%; padding: 0.8rem 1.2rem; border: 2px solid var(--border-gray); border-radius: 8px; font-size: 1rem; margin-bottom: 1.5rem; }
+        .search-input:focus { outline: none; border-color: var(--primary); }
+        .filter-buttons { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 2rem; }
+        .filter-btn { padding: 0.6rem 1.2rem; border: 2px solid var(--border-gray); background: white; border-radius: 20px; cursor: pointer; font-size: 0.9rem; transition: 0.3s ease; }
+        .filter-btn:hover, .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .schemes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
+        .scheme-card { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: 0.3s ease; display: flex; flex-direction: column; }
+        .scheme-card:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.12); }
+        .scheme-category { display: inline-block; padding: 0.3rem 0.8rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.8rem; width: fit-content; }
+        .category-education { background: #E3F2FD; color: #1976D2; }
+        .category-health { background: #FCE4EC; color: #C2185B; }
+        .category-farming { background: #E8F5E9; color: #388E3C; }
+        .category-business { background: #FFF3E0; color: #F57C00; }
+        .category-women { background: #F3E5F5; color: #7B1FA2; }
+        .category-housing { background: #E0F2F1; color: #00796B; }
+        .scheme-name { font-size: 1.1rem; font-weight: 600; color: var(--primary); margin-bottom: 0.8rem; }
+        .scheme-description { color: var(--text-light); font-size: 0.9rem; margin-bottom: 1rem; flex: 1; }
+        .scheme-benefit { background: var(--light-gray); padding: 0.8rem; border-radius: 8px; text-align: center; margin-bottom: 1rem; font-weight: 600; color: var(--primary); }
+        .scheme-actions { display: flex; gap: 0.8rem; }
+        .btn-small { flex: 1; padding: 0.6rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.3s ease; }
+        .btn-outline { background: white; color: var(--primary); border: 2px solid var(--primary); }
+        .btn-outline:hover { background: var(--primary); color: white; }
+        .btn-solid { background: var(--primary); color: white; }
+        .btn-solid:hover { background: #0f4c2a; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; padding: 1rem; }
+        .modal.active { display: flex; }
+        .modal-content { background: white; border-radius: 12px; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto; padding: 2rem; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-close { float: right; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-light); }
+        .modal h2 { color: var(--primary); margin-bottom: 1.5rem; clear: both; }
+        .modal h3 { color: var(--primary); margin-top: 1.5rem; margin-bottom: 0.8rem; }
+        .modal ul, .modal ol { margin-left: 1.5rem; margin-bottom: 1rem; }
+        .modal li { margin-bottom: 0.5rem; color: var(--text-light); }
+        .modal-actions { display: flex; gap: 1rem; margin-top: 2rem; }
+        .eligibility-container { padding: 2rem; max-width: 600px; margin: 0 auto; }
+        .eligibility-header { text-align: center; margin-bottom: 2rem; }
+        .eligibility-header h1 { color: var(--primary); margin-bottom: 0.5rem; }
+        .progress-bar { width: 100%; height: 6px; background: var(--border-gray); border-radius: 3px; margin-bottom: 2rem; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: 0.3s ease; }
+        .quiz-question { display: none; animation: fadeIn 0.3s ease; }
+        .quiz-question.active { display: block; }
+        .question-text { font-size: 1.2rem; font-weight: 600; color: var(--primary); margin-bottom: 1.5rem; }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 2rem; }
+        .option-card { background: white; border: 2px solid var(--border-gray); padding: 1rem; border-radius: 8px; cursor: pointer; transition: 0.3s ease; }
+        .option-card:hover { border-color: var(--primary); background: rgba(27,107,58,0.05); }
+        .option-card.selected { background: var(--primary); color: white; border-color: var(--primary); }
+        .quiz-buttons { display: flex; gap: 1rem; justify-content: space-between; margin-top: 1rem; }
+        .btn-quiz { padding: 0.8rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s ease; font-size: 1rem; }
+        .btn-quiz-back { background: var(--light-gray); color: var(--text-dark); }
+        .btn-quiz-next { background: var(--primary); color: white; }
+        .btn-quiz:disabled { opacity: 0.4; cursor: not-allowed; }
+        .results-container { display: none; animation: fadeIn 0.5s ease; }
+        .results-container.active { display: block; }
+        .results-header { text-align: center; margin-bottom: 2rem; }
+        .results-header h2 { color: var(--primary); font-size: 1.8rem; margin-bottom: 1rem; }
+        .benefit-amount { font-size: 2rem; font-weight: 700; color: var(--success); margin: 1rem 0; }
+        .match-card { background: var(--light-gray); padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--primary); }
+        .match-scheme-name { font-weight: 600; color: var(--primary); margin-bottom: 0.5rem; }
+        .match-benefit { color: var(--success); font-weight: 600; margin-bottom: 0.5rem; }
+        .match-reason { font-size: 0.9rem; color: var(--text-light); margin-bottom: 1rem; }
+        .letter-container { padding: 2rem; max-width: 800px; margin: 0 auto; }
+        .letter-header { text-align: center; margin-bottom: 2rem; }
+        .letter-header h1 { color: var(--primary); margin-bottom: 0.5rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--primary); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem; border: 1px solid var(--border-gray); border-radius: 8px; font-size: 0.95rem; font-family: inherit; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(27,107,58,0.1); }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .letter-output { display: none; margin-top: 2rem; padding: 2rem; background: white; border: 2px solid var(--border-gray); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .letter-output.active { display: block; }
+        .letter-content { line-height: 1.8; color: var(--text-dark); margin-bottom: 2rem; white-space: pre-wrap; word-wrap: break-word; font-family: 'Courier New', monospace; font-size: 0.9rem; }
+        .output-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .impact-container { padding: 2rem; max-width: 1200px; margin: 0 auto; }
+        .impact-header { text-align: center; margin-bottom: 3rem; }
+        .impact-header h1 { color: var(--primary); font-size: 2.5rem; margin-bottom: 1rem; }
+        .impact-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
+        .stat-card { background: white; padding: 2rem; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-top: 4px solid var(--primary); }
+        .stat-card h3 { color: var(--text-light); font-size: 0.95rem; margin-bottom: 1rem; font-weight: 500; }
+        .stat-card .big-number { font-size: 2.5rem; font-weight: 700; color: var(--primary); }
+        .charts-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
+        .chart-box { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .chart-box h3 { color: var(--primary); margin-bottom: 1.5rem; text-align: center; }
+        .activity-feed { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 2rem; }
+        .activity-feed h3 { color: var(--primary); margin-bottom: 1.5rem; }
+        .activity-item { padding: 1rem; border-left: 3px solid var(--primary); margin-bottom: 1rem; background: var(--light-gray); border-radius: 4px; color: var(--text-light); font-size: 0.9rem; }
+        .ai-response-text strong { font-weight: 700; color: var(--primary); }
+        .ai-response-text br { display: block; margin: 4px 0; }
+        .api-badge { background: rgba(255,153,51,0.15); border: 1px solid rgba(255,153,51,0.4); color: #c17a00; font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 10px; display: inline-block; margin-left: 0.5rem; }
+        .api-key-banner { background: #FFF3CD; color: #856404; border: 1px solid #FFEEBA; padding: 0.9rem 1rem; border-radius: 12px; margin: 1rem 1.5rem 0; display: none; align-items: center; justify-content: space-between; gap: 1rem; }
+        .api-key-banner button { background: #856404; color: white; border: none; border-radius: 8px; padding: 0.5rem 0.9rem; cursor: pointer; }
+        .api-key-banner button:hover { opacity: 0.9; }
+        @media (max-width: 768px) {
+            .nav-links { display: none; position: absolute; top: 60px; left: 0; right: 0; background: var(--primary); flex-direction: column; padding: 1rem; gap: 0; }
+            .nav-links.active { display: flex; }
+            .hamburger { display: block; }
+            .hero h1 { font-size: 2rem; }
+            .schemes-grid { grid-template-columns: 1fr; }
+            .message-bubble { max-width: 100%; }
+            .charts-container { grid-template-columns: 1fr; }
+            .stats-row { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="navbar-left">
+        <div class="logo" onclick="navigateTo('home')">🇮🇳 BharatVoice AI</div>
+        <ul class="nav-links" id="navLinks">
+            <li class="nav-link active" onclick="navigateTo('home')" data-i18n="nav_home">Home</li>
+            <li class="nav-link" onclick="navigateTo('chat')" data-i18n="nav_chat">Chat</li>
+            <li class="nav-link" onclick="navigateTo('schemes')" data-i18n="nav_schemes">Schemes</li>
+            <li class="nav-link" onclick="navigateTo('eligibility')" data-i18n="nav_eligibility">Eligibility</li>
+            <li class="nav-link" onclick="navigateTo('letter')" data-i18n="nav_letter">Letter</li>
+            <li class="nav-link" onclick="navigateTo('impact')" data-i18n="nav_impact">Impact</li>
+        </ul>
+    </div>
+    <div class="navbar-right">
+        <select class="language-selector" id="languageSelector" onchange="changeLanguage(this.value)">
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="mr">मराठी</option>
+            <option value="ta">தமிழ்</option>
+            <option value="te">తెలుగు</option>
+        </select>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+    </div>
+</nav>
+
+<div class="page-container">
+
+<!-- HOME PAGE -->
+<div id="home" class="page active">
+    <div class="hero">
+        <h1>BharatVoice AI</h1>
+        <div class="tagline" data-i18n="hero_tagline">Apni Bhasha Mein, Apna Haq</div>
+        <div class="subtitle" data-i18n="hero_subtitle">Your Right, In Your Language</div>
+        <p class="description" data-i18n="hero_desc">Discover government schemes, scholarships and benefits you qualify for — explained simply in your own language</p>
+        <div class="cta-buttons">
+            <button class="btn btn-primary" onclick="navigateTo('chat')" data-i18n="hero_btn_chat">🎤 Start Chatting</button>
+            <button class="btn btn-secondary" onclick="navigateTo('eligibility')" data-i18n="hero_btn_eligibility">✅ Check Eligibility</button>
+        </div>
+    </div>
+    <div class="stats-row">
+        <div class="stat"><div class="stat-number" id="stat1">0</div><div class="stat-label" data-i18n="stat1_label">Schemes Available</div></div>
+        <div class="stat"><div class="stat-number" id="stat2">0</div><div class="stat-label" data-i18n="stat2_label">Languages Supported</div></div>
+        <div class="stat"><div class="stat-number" id="stat3">0</div><div class="stat-label" data-i18n="stat3_label">Citizens Helped</div></div>
+        <div class="stat"><div class="stat-number" id="stat4">0</div><div class="stat-label" data-i18n="stat4_label">Crore Benefits Unlocked</div></div>
+    </div>
+    <div class="features-row">
+        <div class="feature-card"><div class="feature-icon">🎤</div><h3 data-i18n="feat1_title">Voice Support</h3><p data-i18n="feat1_desc">Ask your questions in your own language using voice — no typing needed</p></div>
+        <div class="feature-card"><div class="feature-icon">🌐</div><h3 data-i18n="feat2_title">Multilingual AI</h3><p data-i18n="feat2_desc">Instant responses in Hindi, Marathi, Tamil, Telugu and more Indian languages</p></div>
+        <div class="feature-card"><div class="feature-icon">✅</div><h3 data-i18n="feat3_title">Eligibility Checker</h3><p data-i18n="feat3_desc">Discover which schemes you qualify for and how much money you can claim</p></div>
+        <div class="feature-card"><div class="feature-icon">📄</div><h3 data-i18n="feat4_title">Letter Generator</h3><p data-i18n="feat4_desc">Generate ready-to-print application letters in Hindi and English instantly</p></div>
+    </div>
+    <div class="how-it-works">
+        <h2 data-i18n="hiw_title">How It Works</h2>
+        <div class="steps-grid">
+            <div class="step"><div class="step-number">1</div><h4 data-i18n="step1_title">Select Language</h4><p data-i18n="step1_desc">Choose your preferred Indian language from the top menu</p></div>
+            <div class="step"><div class="step-number">2</div><h4 data-i18n="step2_title">Ask Your Question</h4><p data-i18n="step2_desc">Type or speak your question about any government scheme</p></div>
+            <div class="step"><div class="step-number">3</div><h4 data-i18n="step3_title">Get Simple Answer</h4><p data-i18n="step3_desc">Receive clear eligibility and benefit information in your language</p></div>
+            <div class="step"><div class="step-number">4</div><h4 data-i18n="step4_title">Apply for Scheme</h4><p data-i18n="step4_desc">Get step-by-step guidance and direct links to apply</p></div>
+        </div>
+    </div>
+    <div class="testimonials">
+        <h2 data-i18n="testimonials_title">What People Say</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial"><p>"This app helped me discover PM Kisan! I never knew I was eligible. Got my first ₹2000 installment!"</p><div class="testimonial-author">Rajesh Kumar</div><div class="testimonial-location">Farmer, Haryana</div></div>
+            <div class="testimonial"><p>"Simple explanation in Marathi made everything clear! My daughter is now enrolled in Sukanya Samriddhi."</p><div class="testimonial-author">Priya Sharma</div><div class="testimonial-location">Homemaker, Maharashtra</div></div>
+            <div class="testimonial"><p>"Got my MUDRA loan approved! Never thought I could borrow without collateral. Changed my life!"</p><div class="testimonial-author">Mohammed Ali</div><div class="testimonial-location">Business Owner, UP</div></div>
+        </div>
+    </div>
+    <footer>
+        <div class="footer-links"><a href="#">About</a><a href="#">Contact</a><a href="#">Privacy Policy</a></div>
+        <p>Made with ❤️ for India — BharatVoice AI 2026 | Built on <strong>Adaption Track</strong></p>
+    </footer>
+</div>
+
+<!-- CHAT PAGE -->
+<div id="chat" class="page">
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="chat-header-title">
+                <h2 data-i18n="chat_title">🤖 BharatVoice AI Assistant <span class="api-badge">Gemini AI</span></h2>
+                <div class="online-status"><span class="status-dot"></span><span data-i18n="chat_status">Online — Ready to help</span></div>
+            </div>
+        </div>
+        <div class="api-key-banner" id="apiKeyBanner" style="display:none;"></div>
+        <div class="messages-container" id="messagesContainer">
+            <div class="message ai">
+                <div class="ai-icon">🤖</div>
+                <div class="message-content">
+                    <div class="message-bubble">
+                        <div class="ai-response-text" id="welcomeMsg">Namaste! 🙏 I am <strong>BharatVoice AI</strong>.<br><br>Ask me about any government scheme, scholarship, or benefit. I will explain everything simply in your language.</div>
+                        <button class="speaker-btn" onclick="speakText(this)">🔊</button>
+                    </div>
+                    <div class="message-time">Now</div>
+                </div>
+            </div>
+            <div class="suggested-chips" id="suggestedChips">
+                <div class="chip" data-i18n-chip="chip1" onclick="sendSuggestedChip(this)">What is PM Kisan?</div>
+                <div class="chip" data-i18n-chip="chip2" onclick="sendSuggestedChip(this)">Scholarships for students</div>
+                <div class="chip" data-i18n-chip="chip3" onclick="sendSuggestedChip(this)">Health schemes</div>
+                <div class="chip" data-i18n-chip="chip4" onclick="sendSuggestedChip(this)">Business loans</div>
+                <div class="chip" data-i18n-chip="chip5" onclick="sendSuggestedChip(this)">Women schemes</div>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <button class="voice-btn" id="voiceBtn" onclick="toggleVoiceRecognition()" title="Click to speak">🎤</button>
+            <input type="text" class="chat-input" id="chatInput" placeholder="Type your question or click 🎤 to speak..." onkeypress="handleChatKeyPress(event)" oninput="toggleSendBtn()">
+            <button class="send-btn" onclick="sendMessage()" id="sendBtn" disabled>➤</button>
+        </div>
+    </div>
+</div>
+
+<!-- SCHEMES PAGE -->
+<div id="schemes" class="page">
+    <div class="schemes-container">
+        <div class="schemes-header">
+            <h1 data-i18n="schemes_title">🏛️ All Government Schemes</h1>
+            <p data-i18n="schemes_subtitle">Explore 20+ government schemes and benefits — click Know More for full details</p>
+        </div>
+        <input type="text" class="search-input" id="schemeSearch" placeholder="🔍 Search schemes by name or category..." onkeyup="filterSchemes()">
+        <div class="filter-buttons">
+            <button class="filter-btn active" onclick="filterByCategory('all', this)" data-i18n="filter_all">All</button>
+            <button class="filter-btn" onclick="filterByCategory('education', this)" data-i18n="filter_education">📚 Education</button>
+            <button class="filter-btn" onclick="filterByCategory('health', this)" data-i18n="filter_health">🏥 Health</button>
+            <button class="filter-btn" onclick="filterByCategory('farming', this)" data-i18n="filter_farming">🌾 Farming</button>
+            <button class="filter-btn" onclick="filterByCategory('business', this)" data-i18n="filter_business">💼 Business</button>
+            <button class="filter-btn" onclick="filterByCategory('women', this)" data-i18n="filter_women">👩 Women</button>
+            <button class="filter-btn" onclick="filterByCategory('housing', this)" data-i18n="filter_housing">🏠 Housing</button>
+        </div>
+        <div class="schemes-grid" id="schemesGrid"></div>
+    </div>
+</div>
+
+<!-- ELIGIBILITY PAGE -->
+<div id="eligibility" class="page">
+    <div class="eligibility-container">
+        <div class="eligibility-header">
+            <h1 data-i18n="elig_title">✅ Find Your Schemes</h1>
+            <p data-i18n="elig_subtitle">Answer 6 simple questions to discover all benefits you qualify for</p>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div id="quizContainer"></div>
+        <div class="results-container" id="resultsContainer">
+            <div class="results-header">
+                <h2>🎉 You Qualify For</h2>
+                <h3 id="qualifyCount" style="color:var(--success);font-size:2rem;"></h3>
+                <p>potential benefits available for you</p>
+                <div class="benefit-amount" id="totalBenefitAmount">₹0</div>
+                <p style="color:var(--text-light);font-size:0.9rem;">estimated annual benefit you may be missing!</p>
+            </div>
+            <div class="results-matches" id="resultsMatches"></div>
+            <div style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap;">
+                <button class="btn btn-primary" onclick="retakeQuiz()">🔄 Retake Quiz</button>
+                <button class="btn btn-secondary" onclick="navigateTo('schemes')">📋 Browse All Schemes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- LETTER PAGE -->
+<div id="letter" class="page">
+    <div class="letter-container">
+        <div class="letter-header">
+            <h1 data-i18n="letter_title">📄 Generate Application Letter</h1>
+            <p data-i18n="letter_subtitle">Fill your details and get a ready-to-print formal application letter</p>
+        </div>
+        <div class="form-group"><label data-i18n="label_fullname">Full Name *</label><input type="text" id="letterFullName" placeholder="Enter your full name"></div>
+        <div class="form-group"><label data-i18n="label_father">Father's / Husband's Name *</label><input type="text" id="letterFatherName" placeholder="Enter father or husband name"></div>
+        <div class="form-group"><label data-i18n="label_village">Village / City *</label><input type="text" id="letterVillage" placeholder="Enter village or city name"></div>
+        <div class="form-group"><label data-i18n="label_district">District *</label><input type="text" id="letterDistrict" placeholder="Enter district name"></div>
+        <div class="form-group"><label data-i18n="label_state">State *</label>
+            <select id="letterState">
+                <option value="">Select State</option>
+                <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option><option>Bihar</option><option>Chhattisgarh</option><option>Goa</option><option>Gujarat</option><option>Haryana</option><option>Himachal Pradesh</option><option>Jharkhand</option><option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option><option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Punjab</option><option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option><option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option><option>Delhi</option><option>Jammu and Kashmir</option>
+            </select>
+        </div>
+        <div class="form-group"><label data-i18n="label_pin">PIN Code</label><input type="text" id="letterPin" placeholder="Enter 6-digit PIN code" maxlength="6"></div>
+        <div class="form-group"><label data-i18n="label_aadhaar">Aadhaar Last 4 Digits</label><input type="text" id="letterAadhaar" placeholder="XXXX" maxlength="4"></div>
+        <div class="form-group"><label data-i18n="label_scheme">Scheme Name *</label>
+            <select id="letterScheme">
+                <option value="">Select Scheme</option>
+                <option>PM Kisan Samman Nidhi</option><option>Ayushman Bharat PMJAY</option><option>PM Awas Yojana</option><option>National Scholarship Portal</option><option>PM MUDRA Yojana</option><option>Sukanya Samriddhi Yojana</option><option>PM Ujjwala Yojana</option><option>Kisan Credit Card</option><option>Atal Pension Yojana</option><option>Stand Up India</option><option>PM Fasal Bima Yojana</option><option>MGNREGA</option><option>PM Jan Dhan Yojana</option><option>PMKVY Skill Development</option>
+            </select>
+        </div>
+        <div class="form-group"><label data-i18n="label_purpose">Purpose of Application</label><textarea id="letterPurpose" placeholder="Briefly explain why you need this scheme..."></textarea></div>
+        <button class="btn btn-primary" onclick="generateLetter()" style="width:100%;margin-bottom:2rem;" data-i18n="btn_generate">📝 Generate Letter</button>
+        <div class="letter-output" id="letterOutput">
+            <div class="letter-content" id="letterContent"></div>
+            <div class="output-buttons">
+                <button class="btn btn-primary" onclick="printLetter()" data-i18n="btn_print">🖨️ Print</button>
+                <button class="btn btn-secondary" onclick="copyToClipboard()" data-i18n="btn_copy">📋 Copy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- IMPACT PAGE -->
+<div id="impact" class="page">
+    <div class="impact-container">
+        <div class="impact-header">
+            <h1 data-i18n="impact_title">📊 Our Impact</h1>
+            <p data-i18n="impact_subtitle">Transforming access to government benefits across India</p>
+        </div>
+        <div class="impact-stats">
+            <div class="stat-card"><h3 data-i18n="imp1_label">Total Queries Answered</h3><div class="big-number" id="imp1">0</div></div>
+            <div class="stat-card"><h3 data-i18n="imp2_label">Schemes Explained</h3><div class="big-number" id="imp2">0</div></div>
+            <div class="stat-card"><h3 data-i18n="imp3_label">Letters Generated</h3><div class="big-number" id="imp3">0</div></div>
+            <div class="stat-card"><h3 data-i18n="imp4_label">Benefits Unlocked</h3><div class="big-number" id="imp4">₹0</div></div>
+        </div>
+        <div class="charts-container">
+            <div class="chart-box"><h3 data-i18n="chart1_title">Top Searched Schemes</h3><canvas id="topSchemesChart"></canvas></div>
+            <div class="chart-box"><h3 data-i18n="chart2_title">Language Distribution</h3><canvas id="languageChart"></canvas></div>
+        </div>
+        <div class="chart-box" style="margin-bottom:2rem;"><h3 data-i18n="chart3_title">Usage Over Last 30 Days</h3><canvas id="usageChart"></canvas></div>
+        <div class="activity-feed"><h3>🕐 Recent Activity</h3><div id="activityFeed"></div></div>
+    </div>
+</div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="schemeModal" onclick="closeModalOutside(event)">
+    <div class="modal-content" id="schemeModalContent"></div>
+</div>
+
+<script>
+// ============================================================
+// CONFIGURATION — GEMINI API KEY
+// Store your key in localStorage or paste one below.
+// Get a key at: aistudio.google.com → Get API Key
+// ============================================================
+const DEFAULT_GEMINI_API_KEY = "";
+let GEMINI_API_KEY = localStorage.getItem('GEMINI_API_KEY') || DEFAULT_GEMINI_API_KEY;
+
+const apiBannerTexts = {
+    en: {
+        noKey: 'No Gemini API key is configured. Click Configure to paste your key.',
+        button: 'Configure API Key',
+        noKeyFallback: 'No Gemini API key is configured. Using local fallback response.',
+        apiFailedFallback: 'Gemini API failed: {error}. Using local fallback response.'
+    },
+    hi: {
+        noKey: 'कोई Gemini API कुंजी कॉन्फ़िगर नहीं है। अपनी कुंजी पेस्ट करने के लिए Configure पर क्लिक करें।',
+        button: 'API कुंजी कॉन्फ़िगर करें',
+        noKeyFallback: 'कोई Gemini API कुंजी कॉन्फ़िगर नहीं है। स्थानीय फ़ॉलबैक उत्तर का उपयोग किया जा रहा है।',
+        apiFailedFallback: 'Gemini API विफल हुआ: {error}. स्थानीय फ़ॉलबैक उत्तर का उपयोग किया जा रहा है।'
+    },
+    mr: {
+        noKey: 'कोणतीही Gemini API की कॉन्फिगर केलेली नाही. आपली की पेस्ट करण्यासाठी Configure वर क्लिक करा.',
+        button: 'API की कॉन्फिगर करा',
+        noKeyFallback: 'कोणतीही Gemini API की कॉन्फिगर केलेली नाही. स्थानिक फॉलबॅक प्रतिसाद वापरत आहे.',
+        apiFailedFallback: 'Gemini API अयशस्वी: {error}. स्थानिक फॉलबॅक प्रतिसाद वापरत आहे.'
+    },
+    ta: {
+        noKey: 'எந்த Gemini API முக்கியமும் உள்ளமைக்கப்படவில்லை. உங்கள் முக்கியத்தை ஒட்ட Configure ஐ கிளிக் செய்யவும்.',
+        button: 'API விசையை அமைக்கவும்',
+        noKeyFallback: 'எந்த Gemini API விசையும் உள்ளமைக்கப்படவில்லை. உள்ளூர் விருப்ப பதிலைக் பயன்படுத்துகிறோம்.',
+        apiFailedFallback: 'Gemini API தோல்வியடைந்தது: {error}. உள்ளூர் விருப்ப பதிலைக் பயன்படுத்துகிறோம்.'
+    },
+    te: {
+        noKey: 'ఏ Gemini API కీని కాన్ఫిగర్ చేయలేదు. మీ కీని పేస్ట్ చేయడానికి Configure ను క్లిక్ చేయండి.',
+        button: 'API కీని కాన్ఫిగర్ చేయండి',
+        noKeyFallback: 'ఏ Gemini API కీని కాన్ఫిగర్ చేయలేదు. లోకల్ fallback ప్రతిస్పందనను ఉపయోగిస్తున్నాం.',
+        apiFailedFallback: 'Gemini API విఫలమైంది: {error}. లోకల్ fallback ప్రతిస్పందనను ఉపయోగిస్తున్నాం.'
+    }
+};
+
+function getApiText(key) {
+    const texts = apiBannerTexts[currentLanguage] || apiBannerTexts.en;
+    return texts[key] || apiBannerTexts.en[key] || '';
+}
+
+function isGeminiKeyConfigured() {
+    return typeof GEMINI_API_KEY === 'string' && GEMINI_API_KEY.trim().length > 20;
+}
+
+function promptForApiKey() {
+    const key = prompt(getApiText('noKey'));
+    if (!key) return;
+    GEMINI_API_KEY = key.trim();
+    localStorage.setItem('GEMINI_API_KEY', GEMINI_API_KEY);
+    updateApiKeyBanner();
+    alert(getApiText('button') + ' saved. You can now retry your query.');
+}
+
+function updateApiKeyBanner() {
+    const banner = document.getElementById('apiKeyBanner');
+    if (!banner) return;
+
+    if (!isGeminiKeyConfigured()) {
+        banner.style.display = 'flex';
+        banner.innerHTML = `
+            <span>${getApiText('noKey')}</span>
+            <button type="button" onclick="promptForApiKey()">${getApiText('button')}</button>
+        `;
+    } else {
+        banner.style.display = 'none';
+    }
+}
+
+// ============ TRANSLATIONS ============
+const translations = {
+    en: {
+        nav_home:'Home', nav_chat:'Chat', nav_schemes:'Schemes',
+        nav_eligibility:'Eligibility', nav_letter:'Letter', nav_impact:'Impact',
+        hero_tagline:'Apni Bhasha Mein, Apna Haq',
+        hero_subtitle:'Your Right, In Your Language',
+        hero_desc:'Discover government schemes, scholarships and benefits you qualify for — explained simply in your own language',
+        hero_btn_chat:'🎤 Start Chatting', hero_btn_eligibility:'✅ Check Eligibility',
+        stat1_label:'Schemes Available', stat2_label:'Languages Supported',
+        stat3_label:'Citizens Helped', stat4_label:'Crore Benefits Unlocked',
+        feat1_title:'Voice Support', feat1_desc:'Ask your questions in your own language using voice — no typing needed',
+        feat2_title:'Multilingual AI', feat2_desc:'Instant responses in Hindi, Marathi, Tamil, Telugu and more Indian languages',
+        feat3_title:'Eligibility Checker', feat3_desc:'Discover which schemes you qualify for and how much money you can claim',
+        feat4_title:'Letter Generator', feat4_desc:'Generate ready-to-print application letters in Hindi and English instantly',
+        hiw_title:'How It Works',
+        step1_title:'Select Language', step1_desc:'Choose your preferred Indian language from the top menu',
+        step2_title:'Ask Your Question', step2_desc:'Type or speak your question about any government scheme',
+        step3_title:'Get Simple Answer', step3_desc:'Receive clear eligibility and benefit information in your language',
+        step4_title:'Apply for Scheme', step4_desc:'Get step-by-step guidance and direct links to apply',
+        testimonials_title:'What People Say',
+        chat_title:'🤖 BharatVoice AI Assistant', chat_status:'Online — Ready to help',
+        chat_placeholder:'Type your question or click 🎤 to speak...',
+        chip1:'What is PM Kisan?', chip2:'Scholarships for students',
+        chip3:'Health schemes', chip4:'Business loans', chip5:'Women schemes',
+        schemes_title:'🏛️ All Government Schemes',
+        schemes_subtitle:'Explore 20+ government schemes — click Know More for full details',
+        search_placeholder:'🔍 Search schemes by name or category...',
+        filter_all:'All', filter_education:'📚 Education', filter_health:'🏥 Health',
+        filter_farming:'🌾 Farming', filter_business:'💼 Business',
+        filter_women:'👩 Women', filter_housing:'🏠 Housing',
+        elig_title:'✅ Find Your Schemes', elig_subtitle:'Answer 6 simple questions to discover all benefits you qualify for',
+        letter_title:'📄 Generate Application Letter',
+        letter_subtitle:'Fill your details and get a ready-to-print formal application letter',
+        label_fullname:'Full Name *', label_father:"Father's / Husband's Name *",
+        label_village:'Village / City *', label_district:'District *', label_state:'State *',
+        label_pin:'PIN Code', label_aadhaar:'Aadhaar Last 4 Digits',
+        label_scheme:'Scheme Name *', label_purpose:'Purpose of Application',
+        btn_generate:'📝 Generate Letter', btn_print:'🖨️ Print', btn_copy:'📋 Copy',
+        impact_title:'📊 Our Impact', impact_subtitle:'Transforming access to government benefits across India',
+        imp1_label:'Total Queries Answered', imp2_label:'Schemes Explained',
+        imp3_label:'Letters Generated', imp4_label:'Benefits Unlocked',
+        chart1_title:'Top Searched Schemes', chart2_title:'Language Distribution', chart3_title:'Usage Over Last 30 Days',
+        btn_know_more:'Know More', btn_check_qualify:'Check Qualify',
+        cat_farming:'FARMING', cat_education:'EDUCATION', cat_health:'HEALTH', cat_business:'BUSINESS', cat_women:'WOMEN', cat_housing:'HOUSING',
+        welcome_msg:'Namaste! 🙏 I am <strong>BharatVoice AI</strong>.<br><br>Ask me about any government scheme, scholarship, or benefit. I will explain everything simply in your language.',
+        modal_about:'About This Scheme',modal_who:'Who Can Apply',modal_get:'What You Get',modal_docs:'Documents Required',modal_apply:'Apply Now →',modal_close:'Close',
+        doc1:'Aadhaar Card',doc2:'Bank Passbook',doc3:'Income Certificate',doc4:'Land Documents (if needed)',doc5:'Caste Certificate (if needed)',
+        btn_qualify:'Check Eligibility',
+    },
+    hi: {
+        nav_home:'होम', nav_chat:'चैट', nav_schemes:'योजनाएं',
+        nav_eligibility:'पात्रता', nav_letter:'पत्र', nav_impact:'प्रभाव',
+        hero_tagline:'अपनी भाषा में, अपना हक',
+        hero_subtitle:'आपका अधिकार, आपकी भाषा में',
+        hero_desc:'सरकारी योजनाएं, छात्रवृत्ति और लाभ खोजें जिनके लिए आप पात्र हैं — आपकी अपनी भाषा में सरल तरीके से समझाया गया',
+        hero_btn_chat:'🎤 बात करें', hero_btn_eligibility:'✅ पात्रता जांचें',
+        stat1_label:'योजनाएं उपलब्ध', stat2_label:'भाषाएं समर्थित',
+        stat3_label:'नागरिकों की मदद', stat4_label:'करोड़ लाभ मिला',
+        feat1_title:'आवाज़ समर्थन', feat1_desc:'अपनी भाषा में आवाज़ से सवाल पूछें — टाइप करने की जरूरत नहीं',
+        feat2_title:'बहुभाषी AI', feat2_desc:'हिंदी, मराठी, तमिल, तेलुगु और अन्य भारतीय भाषाओं में तुरंत जवाब',
+        feat3_title:'पात्रता जांचकर्ता', feat3_desc:'जानें कि आप कौन सी योजनाओं के लिए पात्र हैं और कितना लाभ मिलेगा',
+        feat4_title:'पत्र जनरेटर', feat4_desc:'हिंदी और अंग्रेजी में प्रिंट के लिए तैयार आवेदन पत्र तुरंत बनाएं',
+        hiw_title:'यह कैसे काम करता है',
+        step1_title:'भाषा चुनें', step1_desc:'ऊपर के मेनू से अपनी पसंदीदा भाषा चुनें',
+        step2_title:'सवाल पूछें', step2_desc:'किसी भी सरकारी योजना के बारे में टाइप करें या बोलें',
+        step3_title:'सरल जवाब पाएं', step3_desc:'अपनी भाषा में स्पष्ट पात्रता और लाभ की जानकारी पाएं',
+        step4_title:'योजना के लिए आवेदन', step4_desc:'चरण-दर-चरण मार्गदर्शन और आवेदन लिंक पाएं',
+        testimonials_title:'लोग क्या कहते हैं',
+        chat_title:'🤖 BharatVoice AI सहायक', chat_status:'ऑनलाइन — मदद के लिए तैयार',
+        chat_placeholder:'अपना सवाल टाइप करें या 🎤 दबाकर बोलें...',
+        chip1:'PM Kisan क्या है?', chip2:'छात्रों के लिए छात्रवृत्ति',
+        chip3:'स्वास्थ्य योजनाएं', chip4:'व्यापार लोन', chip5:'महिला योजनाएं',
+        schemes_title:'🏛️ सभी सरकारी योजनाएं',
+        schemes_subtitle:'20+ सरकारी योजनाएं देखें — पूरी जानकारी के लिए Know More दबाएं',
+        search_placeholder:'🔍 नाम या श्रेणी से योजना खोजें...',
+        filter_all:'सभी', filter_education:'📚 शिक्षा', filter_health:'🏥 स्वास्थ्य',
+        filter_farming:'🌾 किसान', filter_business:'💼 व्यापार',
+        filter_women:'👩 महिला', filter_housing:'🏠 आवास',
+        elig_title:'✅ अपनी योजनाएं खोजें', elig_subtitle:'6 आसान सवालों के जवाब दें और जानें आप किन लाभों के पात्र हैं',
+        letter_title:'📄 आवेदन पत्र बनाएं',
+        letter_subtitle:'अपनी जानकारी भरें और प्रिंट के लिए तैयार आधिकारिक पत्र पाएं',
+        label_fullname:'पूरा नाम *', label_father:'पिता / पति का नाम *',
+        label_village:'गांव / शहर *', label_district:'जिला *', label_state:'राज्य *',
+        label_pin:'पिन कोड', label_aadhaar:'आधार के अंतिम 4 अंक',
+        label_scheme:'योजना का नाम *', label_purpose:'आवेदन का उद्देश्य',
+        btn_generate:'📝 पत्र बनाएं', btn_print:'🖨️ प्रिंट करें', btn_copy:'📋 कॉपी करें',
+        impact_title:'📊 हमारा प्रभाव', impact_subtitle:'पूरे भारत में सरकारी लाभों तक पहुंच बदल रहे हैं',
+        imp1_label:'कुल सवालों के जवाब', imp2_label:'योजनाएं समझाई',
+        imp3_label:'पत्र बनाए गए', imp4_label:'लाभ अनलॉक किए',
+        chart1_title:'सबसे ज्यादा खोजी गई योजनाएं', chart2_title:'भाषा वितरण', chart3_title:'पिछले 30 दिनों का उपयोग',
+        btn_know_more:'अधिक जानें', btn_check_qualify:'पात्रता जांचें',
+        cat_farming:'किसान', cat_education:'शिक्षा', cat_health:'स्वास्थ्य', cat_business:'व्यापार', cat_women:'महिला', cat_housing:'आवास',
+        welcome_msg:'नमस्ते! 🙏 मैं <strong>BharatVoice AI</strong> हूं।<br><br>किसी भी सरकारी योजना, छात्रवृत्ति या लाभ के बारे में मुझसे पूछें। मैं सब कुछ आपकी भाषा में सरल तरीके से समझाऊंगा।',
+        modal_about:'इस योजना के बारे में',modal_who:'कौन आवेदन कर सकता है',modal_get:'आपको क्या मिलेगा',modal_docs:'आवश्यक दस्तावेज',modal_apply:'अभी आवेदन करें →',modal_close:'बंद करें',
+        doc1:'आधार कार्ड',doc2:'बैंक पासबुक',doc3:'आय प्रमाण पत्र',doc4:'भूमि दस्तावेज (यदि आवश्यक)',doc5:'जाति प्रमाण पत्र (यदि आवश्यक)',
+        btn_qualify:'पात्रता जांचें',
+    },
+    mr: {
+        nav_home:'होम', nav_chat:'चॅट', nav_schemes:'योजना',
+        nav_eligibility:'पात्रता', nav_letter:'पत्र', nav_impact:'प्रभाव',
+        hero_tagline:'आपल्या भाषेत, आपला हक्क',
+        hero_subtitle:'तुमचा अधिकार, तुमच्या भाषेत',
+        hero_desc:'सरकारी योजना, शिष्यवृत्ती आणि लाभ शोधा ज्यासाठी तुम्ही पात्र आहात — तुमच्या स्वतःच्या भाषेत सोप्या शब्दात',
+        hero_btn_chat:'🎤 बोलणे सुरू करा', hero_btn_eligibility:'✅ पात्रता तपासा',
+        stat1_label:'योजना उपलब्ध', stat2_label:'भाषा समर्थित',
+        stat3_label:'नागरिकांना मदत', stat4_label:'कोटी लाभ मिळाला',
+        feat1_title:'आवाज समर्थन', feat1_desc:'आपल्या भाषेत आवाजाने प्रश्न विचारा — टाइप करण्याची गरज नाही',
+        feat2_title:'बहुभाषिक AI', feat2_desc:'हिंदी, मराठी, तमिळ, तेलुगु आणि इतर भाषांमध्ये तात्काळ उत्तरे',
+        feat3_title:'पात्रता तपासक', feat3_desc:'कोणत्या योजनांसाठी पात्र आहात आणि किती लाभ मिळेल ते जाणा',
+        feat4_title:'पत्र जनरेटर', feat4_desc:'मराठी आणि इंग्रजीत प्रिंटसाठी तयार अर्जपत्र तत्काळ तयार करा',
+        hiw_title:'हे कसे काम करते',
+        step1_title:'भाषा निवडा', step1_desc:'वरच्या मेनूमधून आपली आवडती भाषा निवडा',
+        step2_title:'प्रश्न विचारा', step2_desc:'कोणत्याही सरकारी योजनेबद्दल टाइप करा किंवा बोला',
+        step3_title:'सोपे उत्तर मिळवा', step3_desc:'आपल्या भाषेत स्पष्ट पात्रता आणि लाभाची माहिती मिळवा',
+        step4_title:'योजनेसाठी अर्ज करा', step4_desc:'पायरीपायरी मार्गदर्शन आणि अर्जासाठी थेट लिंक मिळवा',
+        testimonials_title:'लोक काय म्हणतात',
+        chat_title:'🤖 BharatVoice AI सहायक', chat_status:'ऑनलाइन — मदतीसाठी तयार',
+        chat_placeholder:'तुमचा प्रश्न टाइप करा किंवा 🎤 दाबून बोला...',
+        chip1:'PM Kisan काय आहे?', chip2:'विद्यार्थ्यांसाठी शिष्यवृत्ती',
+        chip3:'आरोग्य योजना', chip4:'व्यवसाय कर्ज', chip5:'महिला योजना',
+        schemes_title:'🏛️ सर्व सरकारी योजना',
+        schemes_subtitle:'20+ सरकारी योजना पहा — संपूर्ण माहितीसाठी Know More दाबा',
+        search_placeholder:'🔍 नावाने किंवा श्रेणीनुसार योजना शोधा...',
+        filter_all:'सर्व', filter_education:'📚 शिक्षण', filter_health:'🏥 आरोग्य',
+        filter_farming:'🌾 शेती', filter_business:'💼 व्यवसाय',
+        filter_women:'👩 महिला', filter_housing:'🏠 गृहनिर्माण',
+        elig_title:'✅ तुमच्या योजना शोधा', elig_subtitle:'6 सोप्या प्रश्नांची उत्तरे द्या आणि तुम्हाला मिळणारे सर्व लाभ जाणून घ्या',
+        letter_title:'📄 अर्जपत्र तयार करा',
+        letter_subtitle:'तुमची माहिती भरा आणि प्रिंटसाठी तयार अधिकृत पत्र मिळवा',
+        label_fullname:'पूर्ण नाव *', label_father:'वडील / पतीचे नाव *',
+        label_village:'गाव / शहर *', label_district:'जिल्हा *', label_state:'राज्य *',
+        label_pin:'पिन कोड', label_aadhaar:'आधारचे शेवटचे 4 अंक',
+        label_scheme:'योजनेचे नाव *', label_purpose:'अर्जाचा उद्देश',
+        btn_generate:'📝 पत्र तयार करा', btn_print:'🖨️ प्रिंट करा', btn_copy:'📋 कॉपी करा',
+        impact_title:'📊 आमचा प्रभाव', impact_subtitle:'संपूर्ण भारतात सरकारी लाभांपर्यंत पोहोच बदलत आहोत',
+        imp1_label:'एकूण प्रश्नांची उत्तरे', imp2_label:'योजना समजावल्या',
+        imp3_label:'पत्रे तयार केली', imp4_label:'लाभ अनलॉक केले',
+        chart1_title:'सर्वाधिक शोधलेल्या योजना', chart2_title:'भाषा वितरण', chart3_title:'मागील 30 दिवसांचा वापर',
+        btn_know_more:'अधिक माहिती', btn_check_qualify:'पात्रता तपासा',
+        cat_farming:'शेती', cat_education:'शिक्षण', cat_health:'आरोग्य', cat_business:'व्यवसाय', cat_women:'महिला', cat_housing:'गृहनिर्माण',
+        welcome_msg:'नमस्कार! 🙏 मी <strong>BharatVoice AI</strong> आहे.<br><br>कोणत्याही सरकारी योजना, शिष्यवृत्ती किंवा लाभाबद्दल मला विचारा. मी सर्व काही तुमच्या भाषेत सोप्या पद्धतीने सांगेन.',
+        modal_about:'या योजनेबद्दल',modal_who:'कोण अर्ज करू शकतो',modal_get:'तुम्हाला काय मिळेल',modal_docs:'आवश्यक कागदपत्रे',modal_apply:'आता अर्ज करा →',modal_close:'बंद करा',
+        doc1:'आधार कार्ड',doc2:'बँक पासबुक',doc3:'उत्पन्न प्रमाणपत्र',doc4:'जमीन कागदपत्रे (आवश्यक असल्यास)',doc5:'जात प्रमाणपत्र (आवश्यक असल्यास)',
+        btn_qualify:'पात्रता तपासा',
+    },
+    ta: {
+        nav_home:'முகப்பு', nav_chat:'அரட்டை', nav_schemes:'திட்டங்கள்',
+        nav_eligibility:'தகுதி', nav_letter:'கடிதம்', nav_impact:'தாக்கம்',
+        hero_tagline:'உங்கள் மொழியில், உங்கள் உரிமை',
+        hero_subtitle:'உங்கள் உரிமை, உங்கள் மொழியில்',
+        hero_desc:'நீங்கள் தகுதியான அரசு திட்டங்கள், உதவித்தொகை மற்றும் சலுகைகளை கண்டறியுங்கள் — உங்கள் சொந்த மொழியில் எளிமையாக விளக்கப்படும்',
+        hero_btn_chat:'🎤 பேச தொடங்கு', hero_btn_eligibility:'✅ தகுதி சரிபார்க்க',
+        stat1_label:'திட்டங்கள் கிடைக்கின்றன', stat2_label:'மொழிகள் ஆதரிக்கப்படுகின்றன',
+        stat3_label:'குடிமக்களுக்கு உதவி', stat4_label:'கோடி சலுகைகள்',
+        feat1_title:'குரல் ஆதரவு', feat1_desc:'உங்கள் மொழியில் குரல் மூலம் கேள்விகள் கேளுங்கள் — தட்டச்சு தேவையில்லை',
+        feat2_title:'பன்மொழி AI', feat2_desc:'இந்தி, மராத்தி, தமிழ், தெலுங்கு மற்றும் பிற இந்திய மொழிகளில் உடனடி பதில்கள்',
+        feat3_title:'தகுதி சரிபார்ப்பாளர்', feat3_desc:'நீங்கள் எந்த திட்டங்களுக்கு தகுதியானவர் என்பதை கண்டறியுங்கள்',
+        feat4_title:'கடிதம் உருவாக்கி', feat4_desc:'தமிழ் மற்றும் ஆங்கிலத்தில் அச்சிட தயாரான விண்ணப்பக் கடிதங்களை உருவாக்குங்கள்',
+        hiw_title:'இது எப்படி வேலை செய்கிறது',
+        step1_title:'மொழி தேர்ந்தெடுக்கவும்', step1_desc:'மேல் மெனுவிலிருந்து உங்கள் விருப்பமான மொழியைத் தேர்ந்தெடுக்கவும்',
+        step2_title:'கேள்வி கேளுங்கள்', step2_desc:'எந்த அரசு திட்டத்தைப் பற்றியும் தட்டச்சு செய்யுங்கள் அல்லது பேசுங்கள்',
+        step3_title:'எளிய பதில் பெறுங்கள்', step3_desc:'உங்கள் மொழியில் தெளிவான தகுதி மற்றும் சலுகை தகவல்களைப் பெறுங்கள்',
+        step4_title:'திட்டத்திற்கு விண்ணப்பிக்கவும்', step4_desc:'படிப்படியான வழிகாட்டுதல் மற்றும் நேரடி இணைப்புகளைப் பெறுங்கள்',
+        testimonials_title:'மக்கள் என்ன சொல்கிறார்கள்',
+        chat_title:'🤖 BharatVoice AI உதவியாளர்', chat_status:'ஆன்லைன் — உதவ தயார்',
+        chat_placeholder:'உங்கள் கேள்வியை தட்டச்சு செய்யுங்கள் அல்லது 🎤 அழுத்தி பேசுங்கள்...',
+        chip1:'PM Kisan என்றால் என்ன?', chip2:'மாணவர்களுக்கு உதவித்தொகை',
+        chip3:'சுகாதார திட்டங்கள்', chip4:'வணிக கடன்கள்', chip5:'பெண்கள் திட்டங்கள்',
+        schemes_title:'🏛️ அனைத்து அரசு திட்டங்கள்',
+        schemes_subtitle:'20+ அரசு திட்டங்களை ஆராயுங்கள் — முழு விவரங்களுக்கு Know More அழுத்துங்கள்',
+        search_placeholder:'🔍 பெயர் அல்லது வகை மூலம் திட்டங்களை தேடுங்கள்...',
+        filter_all:'அனைத்தும்', filter_education:'📚 கல்வி', filter_health:'🏥 சுகாதாரம்',
+        filter_farming:'🌾 விவசாயம்', filter_business:'💼 வணிகம்',
+        filter_women:'👩 பெண்கள்', filter_housing:'🏠 வீட்டுவசதி',
+        elig_title:'✅ உங்கள் திட்டங்களை கண்டறியுங்கள்', elig_subtitle:'6 எளிய கேள்விகளுக்கு பதில் சொல்லி உங்கள் சலுகைகளை கண்டறியுங்கள்',
+        letter_title:'📄 விண்ணப்பக் கடிதம் உருவாக்கு',
+        letter_subtitle:'உங்கள் விவரங்களை நிரப்பி அச்சிட தயாரான உத்தியோகப்பூர்வ கடிதம் பெறுங்கள்',
+        label_fullname:'முழு பெயர் *', label_father:'தந்தை / கணவர் பெயர் *',
+        label_village:'கிராமம் / நகரம் *', label_district:'மாவட்டம் *', label_state:'மாநிலம் *',
+        label_pin:'பின் கோட்', label_aadhaar:'ஆதார் கடைசி 4 இலக்கங்கள்',
+        label_scheme:'திட்டத்தின் பெயர் *', label_purpose:'விண்ணப்பத்தின் நோக்கம்',
+        btn_generate:'📝 கடிதம் உருவாக்கு', btn_print:'🖨️ அச்சிடு', btn_copy:'📋 நகலெடு',
+        impact_title:'📊 எங்கள் தாக்கம்', impact_subtitle:'இந்தியா முழுவதும் அரசு சலுகைகளை அணுகுவதை மாற்றுகிறோம்',
+        imp1_label:'மொத்த கேள்விகளுக்கு பதில்கள்', imp2_label:'திட்டங்கள் விளக்கப்பட்டன',
+        imp3_label:'கடிதங்கள் உருவாக்கப்பட்டன', imp4_label:'சலுகைகள் திறக்கப்பட்டன',
+        chart1_title:'அதிகம் தேடப்பட்ட திட்டங்கள்', chart2_title:'மொழி விநியோகம்', chart3_title:'கடந்த 30 நாட்கள் பயன்பாடு',
+        btn_know_more:'மேலும் அறிய', btn_check_qualify:'தகுதி சரிபார்',
+        cat_farming:'விவசாயம்', cat_education:'கல்வி', cat_health:'சுகாதாரம்', cat_business:'வணிகம்', cat_women:'பெண்கள்', cat_housing:'வீட்டுவசதி',
+        welcome_msg:'வணக்கம்! 🙏 நான் <strong>BharatVoice AI</strong>.<br><br>எந்த அரசு திட்டம், உதவித்தொகை அல்லது சலுகையைப் பற்றியும் என்னிடம் கேளுங்கள். நான் எல்லாவற்றையும் உங்கள் மொழியில் எளிமையாக விளக்குவேன்.',
+        modal_about:'இந்த திட்டத்தைப் பற்றி',modal_who:'யார் விண்ணப்பிக்கலாம்',modal_get:'நீங்கள் என்ன பெறுவீர்கள்',modal_docs:'தேவையான ஆவணங்கள்',modal_apply:'இப்போது விண்ணப்பிக்கவும் →',modal_close:'மூடு',
+        doc1:'ஆதார் அட்டை',doc2:'வங்கி பாஸ்புக்',doc3:'வருமான சான்றிதழ்',doc4:'நில ஆவணங்கள் (தேவைப்பட்டால்)',doc5:'சாதி சான்றிதழ் (தேவைப்பட்டால்)',
+        btn_qualify:'தகுதி சரிபார்',
+    },
+    te: {
+        nav_home:'హోమ్', nav_chat:'చాట్', nav_schemes:'పథకాలు',
+        nav_eligibility:'అర్హత', nav_letter:'లేఖ', nav_impact:'ప్రభావం',
+        hero_tagline:'మీ భాషలో, మీ హక్కు',
+        hero_subtitle:'మీ హక్కు, మీ భాషలో',
+        hero_desc:'మీరు అర్హులైన ప్రభుత్వ పథకాలు, స్కాలర్‌షిప్‌లు మరియు ప్రయోజనాలను కనుగొనండి — మీ స్వంత భాషలో సరళంగా వివరించబడింది',
+        hero_btn_chat:'🎤 మాట్లాడడం ప్రారంభించండి', hero_btn_eligibility:'✅ అర్హత తనిఖీ చేయండి',
+        stat1_label:'పథకాలు అందుబాటులో', stat2_label:'భాషలు మద్దతు',
+        stat3_label:'పౌరులకు సహాయం', stat4_label:'కోటి ప్రయోజనాలు',
+        feat1_title:'వాయిస్ సపోర్ట్', feat1_desc:'మీ భాషలో వాయిస్ ద్వారా ప్రశ్నలు అడగండి — టైప్ చేయవలసిన అవసరం లేదు',
+        feat2_title:'బహుభాషా AI', feat2_desc:'హిందీ, మరాఠీ, తమిళం, తెలుగు మరియు ఇతర భారతీయ భాషలలో తక్షణ సమాధానాలు',
+        feat3_title:'అర్హత తనిఖీదారు', feat3_desc:'మీరు ఏ పథకాలకు అర్హులో మరియు ఎంత డబ్బు క్లెయిమ్ చేయవచ్చో కనుగొనండి',
+        feat4_title:'లేఖ జనరేటర్', feat4_desc:'తెలుగు మరియు ఆంగ్లంలో ప్రింట్ కోసం సిద్ధంగా ఉన్న దరఖాస్తు లేఖలను రూపొందించండి',
+        hiw_title:'ఇది ఎలా పని చేస్తుంది',
+        step1_title:'భాష ఎంచుకోండి', step1_desc:'పై మెను నుండి మీకు ఇష్టమైన భాషను ఎంచుకోండి',
+        step2_title:'ప్రశ్న అడగండి', step2_desc:'ఏదైనా ప్రభుత్వ పథకం గురించి టైప్ చేయండి లేదా మాట్లాడండి',
+        step3_title:'సరళమైన సమాధానం పొందండి', step3_desc:'మీ భాషలో స్పష్టమైన అర్హత మరియు ప్రయోజన సమాచారం పొందండి',
+        step4_title:'పథకానికి దరఖాస్తు', step4_desc:'దశల వారీ మార్గదర్శకత్వం మరియు నేరుగా లింక్‌లు పొందండి',
+        testimonials_title:'ప్రజలు ఏమి చెప్తున్నారు',
+        chat_title:'🤖 BharatVoice AI సహాయకుడు', chat_status:'ఆన్‌లైన్ — సహాయానికి సిద్ధంగా',
+        chat_placeholder:'మీ ప్రశ్నను టైప్ చేయండి లేదా 🎤 నొక్కి మాట్లాడండి...',
+        chip1:'PM Kisan అంటే ఏమిటి?', chip2:'విద్యార్థులకు స్కాలర్‌షిప్‌లు',
+        chip3:'ఆరోగ్య పథకాలు', chip4:'వ్యాపార రుణాలు', chip5:'మహిళా పథకాలు',
+        schemes_title:'🏛️ అన్ని ప్రభుత్వ పథకాలు',
+        schemes_subtitle:'20+ ప్రభుత్వ పథకాలు అన్వేషించండి — పూర్తి వివరాలకు Know More నొక్కండి',
+        search_placeholder:'🔍 పేరు లేదా వర్గం ద్వారా పథకాలను శోధించండి...',
+        filter_all:'అన్నీ', filter_education:'📚 విద్య', filter_health:'🏥 ఆరోగ్యం',
+        filter_farming:'🌾 వ్యవసాయం', filter_business:'💼 వ్యాపారం',
+        filter_women:'👩 మహిళలు', filter_housing:'🏠 గృహనిర్మాణం',
+        elig_title:'✅ మీ పథకాలను కనుగొనండి', elig_subtitle:'6 సరళమైన ప్రశ్నలకు సమాధానమివ్వండి మరియు మీ ప్రయోజనాలను కనుగొనండి',
+        letter_title:'📄 దరఖాస్తు లేఖ రూపొందించండి',
+        letter_subtitle:'మీ వివరాలు నమోదు చేయండి మరియు ప్రింట్ కోసం సిద్ధంగా ఉన్న అధికారిక లేఖ పొందండి',
+        label_fullname:'పూర్తి పేరు *', label_father:'తండ్రి / భర్త పేరు *',
+        label_village:'గ్రామం / నగరం *', label_district:'జిల్లా *', label_state:'రాష్ట్రం *',
+        label_pin:'పిన్ కోడ్', label_aadhaar:'ఆధార్ చివరి 4 అంకెలు',
+        label_scheme:'పథకం పేరు *', label_purpose:'దరఖాస్తు ఉద్దేశ్యం',
+        btn_generate:'📝 లేఖ రూపొందించు', btn_print:'🖨️ ముద్రించు', btn_copy:'📋 కాపీ చేయి',
+        impact_title:'📊 మా ప్రభావం', impact_subtitle:'భారతదేశం అంతటా ప్రభుత్వ ప్రయోజనాలను యాక్సెస్ చేయడాన్ని మారుస్తున్నాము',
+        imp1_label:'మొత్తం ప్రశ్నలకు సమాధానాలు', imp2_label:'పథకాలు వివరించబడ్డాయి',
+        imp3_label:'లేఖలు రూపొందించబడ్డాయి', imp4_label:'ప్రయోజనాలు అన్‌లాక్ చేయబడ్డాయి',
+        chart1_title:'అత్యధికంగా శోధించిన పథకాలు', chart2_title:'భాషా పంపిణీ', chart3_title:'గత 30 రోజుల వినియోగం',
+        btn_know_more:'మరింత తెలుసుకోండి', btn_check_qualify:'అర్హత తనిఖీ',
+        cat_farming:'వ్యవసాయం', cat_education:'విద్య', cat_health:'ఆరోగ్యం', cat_business:'వ్యాపారం', cat_women:'మహిళలు', cat_housing:'గృహనిర్మాణం',
+        welcome_msg:'నమస్కారం! 🙏 నేను <strong>BharatVoice AI</strong>.<br><br>ఏదైనా ప్రభుత్వ పథకం, స్కాలర్‌షిప్ లేదా ప్రయోజనం గురించి నన్ను అడగండి. నేను అన్నింటినీ మీ భాషలో సరళంగా వివరిస్తాను.',
+        modal_about:'ఈ పథకం గురించి',modal_who:'ఎవరు దరఖాస్తు చేయవచ్చు',modal_get:'మీకు ఏమి లభిస్తుంది',modal_docs:'అవసరమైన పత్రాలు',modal_apply:'ఇప్పుడు దరఖాస్తు చేయండి →',modal_close:'మూసివేయండి',
+        doc1:'ఆధార్ కార్డ్',doc2:'బ్యాంక్ పాస్‌బుక్',doc3:'ఆదాయ ధృవీకరణ పత్రం',doc4:'భూమి పత్రాలు (అవసరమైతే)',doc5:'కుల ధృవీకరణ పత్రం (అవసరమైతే)',
+        btn_qualify:'అర్హత తనిఖీ',
+    }
+};
+
+
+// ============ SCHEME DESCRIPTIONS IN INDIAN LANGUAGES ============
+const schemeDescriptions = {
+    en: {
+        1:'Direct income support for all farmers with landholding',
+        2:"World's largest health insurance scheme for poor families",
+        3:'Free pucca houses for homeless and BPL families',
+        4:'One-stop portal for all central and state scholarships',
+        5:'Business loans without collateral for small entrepreneurs',
+        6:'High-interest savings account for girl child education',
+        7:'Free LPG gas connection for BPL women',
+        8:'Guaranteed pension for unorganised sector workers',
+        9:'Large loans for SC/ST and women entrepreneurs',
+        10:'Comprehensive crop insurance against natural calamities',
+        11:'Flexible credit for all farm needs at low interest',
+        12:'Free skill training with job placement guarantee',
+        13:'Comprehensive support for new startups',
+        14:'100 days guaranteed wage employment for rural families',
+        15:'Zero balance bank account with insurance benefits',
+        16:'Accident insurance for bank account holders',
+        17:'Affordable life insurance for all',
+        18:'Cash benefit for pregnant and lactating mothers',
+        19:'Full scholarship for SC students in Class 11 and above',
+        20:'Scheme to protect and educate the girl child'
+    },
+    hi: {
+        1:'जमीन वाले सभी किसानों के लिए प्रत्यक्ष आय सहायता',
+        2:'गरीब परिवारों के लिए दुनिया की सबसे बड़ी स्वास्थ्य बीमा योजना',
+        3:'बेघर और BPL परिवारों के लिए मुफ्त पक्के मकान',
+        4:'सभी केंद्र और राज्य छात्रवृत्तियों के लिए एक पोर्टल',
+        5:'छोटे उद्यमियों के लिए बिना गारंटी के व्यापार लोन',
+        6:'बालिका शिक्षा के लिए उच्च ब्याज बचत खाता',
+        7:'BPL महिलाओं के लिए मुफ्त LPG गैस कनेक्शन',
+        8:'असंगठित क्षेत्र के कामगारों के लिए गारंटीड पेंशन',
+        9:'SC/ST और महिला उद्यमियों के लिए बड़े लोन',
+        10:'प्राकृतिक आपदाओं से व्यापक फसल बीमा',
+        11:'कम ब्याज पर सभी कृषि जरूरतों के लिए लचीला ऋण',
+        12:'नौकरी प्लेसमेंट गारंटी के साथ मुफ्त कौशल प्रशिक्षण',
+        13:'नए स्टार्टअप्स के लिए व्यापक सहायता',
+        14:'ग्रामीण परिवारों के लिए 100 दिन गारंटीड मजदूरी रोजगार',
+        15:'बीमा लाभों के साथ जीरो बैलेंस बैंक खाता',
+        16:'बैंक खाताधारकों के लिए दुर्घटना बीमा',
+        17:'सभी के लिए सस्ता जीवन बीमा',
+        18:'गर्भवती और स्तनपान कराने वाली माताओं के लिए नकद लाभ',
+        19:'कक्षा 11 से ऊपर के SC छात्रों के लिए पूर्ण छात्रवृत्ति',
+        20:'बेटी बचाने और पढ़ाने की योजना'
+    },
+    mr: {
+        1:'जमीन असलेल्या सर्व शेतकऱ्यांना थेट उत्पन्न सहाय्य',
+        2:'गरीब कुटुंबांसाठी जगातील सर्वात मोठी आरोग्य विमा योजना',
+        3:'बेघर आणि दारिद्र्यरेषेखालील कुटुंबांसाठी मोफत पक्की घरे',
+        4:'सर्व केंद्र आणि राज्य शिष्यवृत्तींसाठी एकच पोर्टल',
+        5:'लहान उद्योजकांसाठी तारण न ठेवता व्यवसाय कर्ज',
+        6:'मुलींच्या शिक्षणासाठी उच्च व्याज बचत खाते',
+        7:'दारिद्र्यरेषेखालील महिलांसाठी मोफत एलपीजी गॅस कनेक्शन',
+        8:'असंघटित क्षेत्रातील कामगारांसाठी हमी दिलेली पेन्शन',
+        9:'SC/ST आणि महिला उद्योजकांसाठी मोठे कर्ज',
+        10:'नैसर्गिक आपत्तींपासून सर्वसमावेशक पीक विमा',
+        11:'कमी व्याजात सर्व शेती गरजांसाठी लवचिक कर्ज',
+        12:'नोकरी प्लेसमेंट हमीसह मोफत कौशल्य प्रशिक्षण',
+        13:'नवीन स्टार्टअप्ससाठी सर्वसमावेशक सहाय्य',
+        14:'ग्रामीण कुटुंबांसाठी 100 दिवस हमी मजुरी रोजगार',
+        15:'विमा लाभांसह शून्य शिल्लक बँक खाते',
+        16:'बँक खातेधारकांसाठी अपघात विमा',
+        17:'सर्वांसाठी परवडणारे जीवन विमा',
+        18:'गर्भवती आणि स्तनपान करणाऱ्या मातांसाठी रोख लाभ',
+        19:'इयत्ता 11 वरील SC विद्यार्थ्यांसाठी पूर्ण शिष्यवृत्ती',
+        20:'मुलींचे संरक्षण आणि शिक्षणासाठी योजना'
+    },
+    ta: {
+        1:'நிலம் வைத்திருக்கும் விவசாயிகளுக்கு நேரடி வருமான உதவி',
+        2:'ஏழை குடும்பங்களுக்கான உலகின் மிகப்பெரிய சுகாதார காப்பீட்டு திட்டம்',
+        3:'வீடற்ற மற்றும் BPL குடும்பங்களுக்கு இலவச வீடு கட்டுமானம்',
+        4:'அனைத்து உதவித்தொகைகளுக்கான ஒரே போர்டல்',
+        5:'சிறு தொழில்முனைவோருக்கு பிணை இல்லாமல் வணிக கடன்',
+        6:'பெண் குழந்தை கல்விக்காக அதிக வட்டி சேமிப்பு கணக்கு',
+        7:'BPL பெண்களுக்கு இலவச LPG கேஸ் இணைப்பு',
+        8:'அமைப்பு சாரா தொழிலாளர்களுக்கு உறுதியான ஓய்வூதியம்',
+        9:'SC/ST மற்றும் பெண் தொழில்முனைவோருக்கு பெரிய கடன்கள்',
+        10:'இயற்கை பேரிடர்களுக்கு எதிரான விரிவான பயிர் காப்பீடு',
+        11:'குறைந்த வட்டியில் அனைத்து விவசாய தேவைகளுக்கும் கடன்',
+        12:'வேலை வாய்ப்பு உத்தரவாதத்துடன் இலவச திறன் பயிற்சி',
+        13:'புதிய தொடக்க நிறுவனங்களுக்கு விரிவான ஆதரவு',
+        14:'கிராமப்புற குடும்பங்களுக்கு 100 நாள் வேலை உத்தரவாதம்',
+        15:'காப்பீட்டு நலன்களுடன் பூஜ்ஜிய இருப்பு வங்கி கணக்கு',
+        16:'வங்கி கணக்கு வைத்திருப்பவர்களுக்கு விபத்து காப்பீடு',
+        17:'அனைவருக்கும் மலிவான ஆயுள் காப்பீடு',
+        18:'கர்ப்பிணி மற்றும் தாய்ப்பால் கொடுக்கும் தாய்மார்களுக்கு பண உதவி',
+        19:'வகுப்பு 11க்கு மேல் SC மாணவர்களுக்கு முழு உதவித்தொகை',
+        20:'பெண் குழந்தையை பாதுகாக்கவும் படிக்க வைக்கவும் திட்டம்'
+    },
+    te: {
+        1:'భూమి ఉన్న రైతులందరికీ నేరుగా ఆదాయ సహాయం',
+        2:'పేద కుటుంబాలకు ప్రపంచంలోనే అతిపెద్ద ఆరోగ్య బీమా పథకం',
+        3:'నిరాశ్రయులు మరియు BPL కుటుంబాలకు ఉచిత ఇళ్ళు',
+        4:'అన్ని స్కాలర్‌షిప్‌లకు ఒకే పోర్టల్',
+        5:'చిన్న వ్యాపారదారులకు హామీ లేకుండా వ్యాపార రుణాలు',
+        6:'బాలికల విద్య కోసం అధిక వడ్డీ పొదుపు ఖాతా',
+        7:'BPL మహిళలకు ఉచిత LPG గ్యాస్ కనెక్షన్',
+        8:'అసంఘటిత రంగ కార్మికులకు హామీ పెన్షన్',
+        9:'SC/ST మరియు మహిళా వ్యాపారదారులకు పెద్ద రుణాలు',
+        10:'సహజ విపత్తులకు వ్యతిరేకంగా సమగ్ర పంట బీమా',
+        11:'తక్కువ వడ్డీకి అన్ని వ్యవసాయ అవసరాలకు సౌకర్యవంతమైన రుణం',
+        12:'ఉద్యోగ నియామక హామీతో ఉచిత నైపుణ్య శిక్షణ',
+        13:'కొత్త స్టార్టప్‌లకు సమగ్ర మద్దతు',
+        14:'గ్రామీణ కుటుంబాలకు 100 రోజుల హామీ వేతన ఉపాధి',
+        15:'బీమా ప్రయోజనాలతో జీరో బ్యాలెన్స్ బ్యాంక్ ఖాతా',
+        16:'బ్యాంక్ ఖాతాదారులకు ప్రమాద బీమా',
+        17:'అందరికీ చౌకైన జీవిత బీమా',
+        18:'గర్భిణీ మరియు పాలిచ్చే తల్లులకు నగదు ప్రయోజనం',
+        19:'తరగతి 11 పైన SC విద్యార్థులకు పూర్తి స్కాలర్‌షిప్',
+        20:'బాలికలను రక్షించడానికి మరియు చదివించడానికి పథకం'
+    }
+};
+
+
+// ============ FULL DETAILS IN ALL LANGUAGES ============
+const FULL = {
+en:{
+1:'Farmers receive Rs.6000 annually in 3 installments of Rs.2000 directly to bank account. No middlemen involved.',
+2:'Free hospitalization up to Rs.5 lakh per year. Covers 1500+ medical procedures at empanelled hospitals across India.',
+3:'Complete financial assistance for pucca house. Rural: Rs.1.2 lakh, Hilly areas: Rs.1.3 lakh.',
+4:'Covers pre-matric, post-matric and merit scholarships for SC, ST, OBC, minority and general students.',
+5:'Shishu: up to Rs.50K | Kishor: Rs.50K to Rs.5L | Tarun: Rs.5L to Rs.10L. No collateral required.',
+6:'Open with minimum Rs.250. Deposit up to Rs.1.5 lakh per year. Matures when girl turns 21. Tax free under 80C.',
+7:'Free LPG connection with first cylinder and stove. Reduces health hazards from cooking on firewood.',
+8:'Contribute small amounts now and get Rs.1000-5000 pension per month after age 60.',
+9:'Composite loan for new manufacturing, trading or service enterprise. Repayment in 7 years.',
+10:'Covers loss due to drought, flood, cyclone, hailstorm. Premium: 2% for Kharif, 1.5% for Rabi crops.',
+11:'Revolving credit for seeds, fertilizers, pesticides and equipment. Interest rate 4% after government subsidy.',
+12:'Industry-recognized certification in 300+ skills. Free residential training with accommodation and placement.',
+13:'3-year income tax exemption, fast patent processing at 80% discount, Rs.10,000 crore fund of funds access.',
+14:'Legal guarantee of 100 days employment at Rs.220-374 per day. Work provided within 15 days of application.',
+15:'Zero balance account, RuPay debit card, Rs.2L accident insurance, Rs.30K life cover, Rs.10K overdraft after 6 months.',
+16:'Rs.2 lakh for accidental death or full disability. Rs.1 lakh for partial disability. Premium just Rs.20 per year.',
+17:'Rs.2 lakh paid to family on death of policyholder. Premium Rs.436 per year auto-debited from bank.',
+18:'Rs.1000 on early registration, Rs.2000 after 6 months pregnancy, Rs.2000 after birth and first vaccination.',
+19:'Covers full tuition fee, exam fee and maintenance allowance for all courses including professional degrees.',
+20:'Ensures girl child birth registration, prevents sex-selective abortion, promotes girl child education.'
+},
+hi:{
+1:'किसानों को सालाना Rs.6000 तीन किश्तों में सीधे बैंक खाते में मिलते हैं। कोई बिचौलिया नहीं।',
+2:'साल में Rs.5 लाख तक मुफ्त अस्पताल इलाज। पूरे भारत में 1500+ चिकित्सा प्रक्रियाएं कवर।',
+3:'पक्के घर बनाने के लिए पूर्ण सहायता। ग्रामीण: Rs.1.2 लाख, पहाड़ी क्षेत्र: Rs.1.3 लाख।',
+4:'SC, ST, OBC, अल्पसंख्यक और सामान्य वर्ग के Class 1 से PhD तक छात्रवृत्ति।',
+5:'शिशु: Rs.50K तक | किशोर: Rs.50K से Rs.5L | तरुण: Rs.5L से Rs.10L। कोई गारंटी नहीं।',
+6:'न्यूनतम Rs.250 से खाता खोलें। साल में Rs.1.5 लाख जमा। बच्ची के 21 साल होने पर परिपक्व। 80C में टैक्स छूट।',
+7:'पहले सिलेंडर और चूल्हे के साथ मुफ्त LPG कनेक्शन। चूल्हे के धुएं से मुक्ति।',
+8:'अभी छोटी राशि जमा करें और 60 साल बाद हर महीने Rs.1000-5000 पेंशन पाएं।',
+9:'SC/ST या महिला उद्यमियों के लिए नई एंटरप्राइज हेतु कर्ज। 7 साल में चुकाना होगा।',
+10:'सूखा, बाढ़, चक्रवात, ओलावृष्टि से फसल नुकसान कवर। प्रीमियम: खरीफ 2%, रबी 1.5%।',
+11:'बीज, उर्वरक, कीटनाशकों के लिए रिवॉल्विंग क्रेडिट। सरकारी सब्सिडी के बाद सिर्फ 4% ब्याज।',
+12:'300+ कौशल में उद्योग-मान्यता प्राप्त प्रमाणपत्र। मुफ्त आवास के साथ प्रशिक्षण और नौकरी सहायता।',
+13:'3 साल आयकर छूट, 80% छूट पर पेटेंट प्रोसेसिंग, Rs.10,000 करोड़ फंड ऑफ फंड्स तक पहुंच।',
+14:'Rs.220-374 प्रतिदिन की दर से 100 दिन रोजगार की कानूनी गारंटी। आवेदन के 15 दिन में काम।',
+15:'जीरो बैलेंस खाता, RuPay कार्ड, Rs.2L दुर्घटना बीमा, Rs.30K जीवन बीमा, 6 माह बाद Rs.10K ओवरड्राफ्ट।',
+16:'दुर्घटना मृत्यु या पूर्ण विकलांगता पर Rs.2 लाख। आंशिक विकलांगता पर Rs.1 लाख। प्रीमियम मात्र Rs.20 साल।',
+17:'बीमाधारक की मृत्यु पर परिवार को Rs.2 लाख। प्रीमियम Rs.436 साल, बैंक से जून में ऑटो-डेबिट।',
+18:'शुरुआती पंजीकरण पर Rs.1000, 6 माह गर्भावस्था पर Rs.2000, प्रसव और पहले टीकाकरण पर Rs.2000।',
+19:'सभी कोर्स के लिए पूरी ट्यूशन फीस, परीक्षा शुल्क और रखरखाव भत्ता कवर।',
+20:'जन्म पर बालिका पंजीकरण, लिंग चयन गर्भपात रोकना, बालिका शिक्षा को प्रोत्साहन।'
+},
+mr:{
+1:'शेतकऱ्यांना वार्षिक Rs.6000 तीन हप्त्यांमध्ये थेट बँक खात्यात मिळतात. कोणताही मध्यस्थ नाही.',
+2:'दरवर्षी Rs.5 लाखापर्यंत मोफत रुग्णालय उपचार. संपूर्ण भारतात 1500+ वैद्यकीय प्रक्रिया कव्हर.',
+3:'पक्क्या घराच्या बांधकामासाठी संपूर्ण सहाय्य. ग्रामीण: Rs.1.2 लाख, डोंगराळ: Rs.1.3 लाख.',
+4:'SC, ST, OBC, अल्पसंख्याक आणि सामान्य इयत्ता 1 ते PhD विद्यार्थ्यांसाठी शिष्यवृत्ती.',
+5:'शिशू: Rs.50K पर्यंत | किशोर: Rs.50K ते Rs.5L | तरुण: Rs.5L ते Rs.10L. तारण नाही.',
+6:'किमान Rs.250 ने खाते उघडा. वर्षाला Rs.1.5 लाख जमा. मुलगी 21 वर्षी परिपक्व. 80C मध्ये कर सूट.',
+7:'पहिल्या सिलेंडर आणि शेगडीसह मोफत LPG कनेक्शन. चुलीच्या धुरापासून मुक्ती.',
+8:'आता छोटी रक्कम जमा करा आणि 60 नंतर दरमहा Rs.1000-5000 पेन्शन मिळवा.',
+9:'SC/ST किंवा महिला उद्योजकांसाठी नवीन उद्यमासाठी कर्ज. 7 वर्षांत परतफेड.',
+10:'दुष्काळ, पूर, चक्रीवादळ, गारपिटीपासून पीक नुकसान कव्हर. प्रीमियम: खरीप 2%, रब्बी 1.5%.',
+11:'बियाणे, खते, कीटकनाशकांसाठी रिव्हॉल्व्हिंग क्रेडिट. सरकारी अनुदानानंतर फक्त 4% व्याज.',
+12:'300+ कौशल्यांमध्ये उद्योग-मान्यताप्राप्त प्रमाणपत्र. मोफत निवास प्रशिक्षण आणि नोकरी सहाय्य.',
+13:'3 वर्ष आयकर सूट, 80% सवलतीत पेटंट प्रक्रिया, Rs.10,000 कोटी फंड ऑफ फंड्स उपलब्ध.',
+14:'Rs.220-374 प्रतिदिन 100 दिवस रोजगाराची कायदेशीर हमी. अर्जाच्या 15 दिवसांत काम.',
+15:'शून्य शिल्लक खाते, RuPay कार्ड, Rs.2L अपघात विमा, Rs.30K जीवन कवच, 6 महिन्यांनंतर Rs.10K ओव्हरड्राफ्ट.',
+16:'अपघाती मृत्यू किंवा संपूर्ण अपंगत्वावर Rs.2 लाख. आंशिक अपंगत्वावर Rs.1 लाख. प्रीमियम फक्त Rs.20 वर्ष.',
+17:'विमाधारकाच्या मृत्यूवर कुटुंबाला Rs.2 लाख. प्रीमियम Rs.436 वर्ष, बँकेतून जूनमध्ये ऑटो-डेबिट.',
+18:'लवकर नोंदणीवर Rs.1000, 6 महिने गर्भधारणेवर Rs.2000, प्रसूती आणि पहिल्या लसीकरणावर Rs.2000.',
+19:'सर्व अभ्यासक्रमांसाठी पूर्ण ट्यूशन फी, परीक्षा शुल्क आणि देखभाल भत्ता.',
+20:'जन्माच्या वेळी मुलींची नोंदणी, लिंग निवडक गर्भपात प्रतिबंध, मुलींच्या शिक्षणास प्रोत्साहन.'
+},
+ta:{
+1:'விவசாயிகளுக்கு ஆண்டுக்கு Rs.6000 மூன்று தவணைகளில் நேரடியாக வங்கியில் வரும். இடைத்தரகர் இல்லை.',
+2:'ஆண்டுக்கு Rs.5 லட்சம் வரை இலவச மருத்துவமனை சேவை. 1500+ சிகிச்சைகள் கவர் செய்யப்படும்.',
+3:'வீடு கட்டுவதற்கு முழு நிதி உதவி. கிராமம்: Rs.1.2 லட்சம், மலைப்பகுதி: Rs.1.3 லட்சம்.',
+4:'SC, ST, OBC, சிறுபான்மை மற்றும் பொது வகுப்பு 1 முதல் PhD வரை உதவித்தொகை.',
+5:'சிசு: Rs.50K வரை | கிஷோர்: Rs.50K-Rs.5L | தரூண்: Rs.5L-Rs.10L. பிணை தேவையில்லை.',
+6:'குறைந்தது Rs.250 வைப்புடன் திற. ஆண்டுக்கு Rs.1.5 லட்சம் வரை செலுத்தலாம். பெண் 21-ல் முதிர்வு. வரி விலக்கு.',
+7:'முதல் சிலிண்டர் மற்றும் அடுப்புடன் இலவச LPG. விறகு சமையலால் ஏற்படும் உடல்நல பாதிப்பிலிருந்து விடுதலை.',
+8:'இப்போது சிறிய தொகை செலுத்தி 60 வயதிற்கு பிறகு மாதம் Rs.1000-5000 பெறுங்கள்.',
+9:'SC/ST அல்லது பெண் தொழில்முனைவோருக்கு புதிய தொழிலுக்கு கடன். 7 ஆண்டுகளில் திரும்பச் செலுத்தல்.',
+10:'வறட்சி, வெள்ளம், புயல், கல்மழையில் பயிர் இழப்பு கவர். பிரீமியம்: கரீஃப் 2%, ரபீ 1.5%.',
+11:'விதை, உரம், பூச்சிக்கொல்லிகளுக்கு கடன். அரசு மானியத்திற்கு பிறகு வெறும் 4% வட்டி.',
+12:'300+ திறன்களில் சான்றிதழ். இலவச தங்குமிட பயிற்சி மற்றும் வேலை வாய்ப்பு உதவி.',
+13:'3 ஆண்டு வரி விலக்கு, 80% தள்ளுபடியில் காப்புரிமை, Rs.10,000 கோடி நிதி அணுகல்.',
+14:'நாள் Rs.220-374 கூலியில் 100 நாட்கள் வேலை உத்தரவாதம். விண்ணப்பித்த 15 நாட்களில் வேலை.',
+15:'பூஜ்ஜிய இருப்பு கணக்கு, RuPay அட்டை, Rs.2L விபத்து காப்பீடு, 6 மாதத்திற்கு பிறகு Rs.10K ஓவர்ட்ராஃப்ட்.',
+16:'விபத்து மரணம் அல்லது முழு ஊனம் ஏற்பட்டால் Rs.2 லட்சம். பிரீமியம் வெறும் Rs.20 வருடம்.',
+17:'மரணத்தில் குடும்பத்திற்கு Rs.2 லட்சம். பிரீமியம் Rs.436 வருடம், வங்கியிலிருந்து தானாக பிடிக்கப்படும்.',
+18:'பதிவில் Rs.1000, 6 மாத கர்ப்பத்தில் Rs.2000, பிரசவம் மற்றும் முதல் தடுப்பூசிக்கு பிறகு Rs.2000.',
+19:'தொழில்முறை பட்டப்படிப்பு உட்பட அனைத்து படிப்புகளுக்கும் கட்டணம் மற்றும் பராமரிப்பு உதவி.',
+20:'பெண் குழந்தை பிறப்பு பதிவு, பால் தேர்வு கருக்கலைப்பு தடுப்பு, கல்வி ஊக்கம்.'
+},
+te:{
+1:'రైతులకు సంవత్సరానికి Rs.6000 మూడు వాయిదాలలో నేరుగా బ్యాంక్ ఖాతాకు వస్తుంది. మధ్యవర్తి లేదు.',
+2:'సంవత్సరానికి Rs.5 లక్షల వరకు ఉచిత ఆసుపత్రి సేవ. 1500+ వైద్య విధానాలు కవర్ అవుతాయి.',
+3:'ఇల్లు నిర్మించడానికి పూర్తి సహాయం. గ్రామీణ: Rs.1.2 లక్షలు, కొండ ప్రాంతాలు: Rs.1.3 లక్షలు.',
+4:'SC, ST, OBC, మైనారిటీ మరియు సాధారణ తరగతి 1 నుండి PhD వరకు స్కాలర్‌షిప్‌లు.',
+5:'శిశు: Rs.50K వరకు | కిశోర్: Rs.50K-Rs.5L | తరుణ్: Rs.5L-Rs.10L. హామీ అవసరం లేదు.',
+6:'కనీసం Rs.250తో తెరవండి. సంవత్సరానికి Rs.1.5 లక్షలు. అమ్మాయి 21 సంవత్సరాలకు పరిపక్వం. పన్ను మినహాయింపు.',
+7:'మొదటి సిలిండర్ మరియు స్టవ్‌తో ఉచిత LPG కనెక్షన్. కట్టెల పొగ నుండి విముక్తి.',
+8:'చిన్న మొత్తం చెల్లించి 60 తర్వాత నెలకు Rs.1000-5000 పెన్షన్ పొందండి.',
+9:'SC/ST లేదా మహిళా వ్యాపారదారులకు కొత్త వ్యాపారానికి రుణం. 7 సంవత్సరాలలో చెల్లింపు.',
+10:'కరువు, వరద, తుఫాను, వడగళ్ళు వల్ల పంట నష్టానికి కవరేజ్. ప్రీమియం: ఖరీఫ్ 2%, రబీ 1.5%.',
+11:'విత్తనాలు, ఎరువులు, పురుగుమందులకు రుణం. ప్రభుత్వ సబ్సిడీ తర్వాత కేవలం 4% వడ్డీ.',
+12:'300+ నైపుణ్యాలలో పరిశ్రమ-గుర్తింపు పొందిన సర్టిఫికెట్. నివాసంతో ఉచిత శిక్షణ మరియు ఉద్యోగ సహాయం.',
+13:'3 సంవత్సరాల ఆదాయపు పన్ను మినహాయింపు, 80% తగ్గింపుతో పేటెంట్, నిధుల ప్రాప్యత.',
+14:'రోజు Rs.220-374 వేతనంతో 100 రోజుల చట్టపరమైన ఉపాధి హామీ. 15 రోజులలో పని.',
+15:'జీరో బ్యాలెన్స్ ఖాతా, RuPay కార్డ్, Rs.2L ప్రమాద బీమా, 6 నెలల తర్వాత Rs.10K ఓవర్‌డ్రాఫ్ట్.',
+16:'ప్రమాద మరణంపై Rs.2 లక్షలు. పాక్షిక వైకల్యంపై Rs.1 లక్ష. ప్రీమియం కేవలం Rs.20 సంవత్సరం.',
+17:'మరణంపై కుటుంబానికి Rs.2 లక్షలు. ప్రీమియం Rs.436 సంవత్సరం, బ్యాంక్ నుండి జూన్‌లో ఆటో-డెబిట్.',
+18:'నమోదుపై Rs.1000, 6 నెలల గర్భంపై Rs.2000, ప్రసవం మరియు మొదటి టీకా తర్వాత Rs.2000.',
+19:'అన్ని కోర్సులకు పూర్తి ట్యూషన్ ఫీజు, పరీక్ష రుసుము మరియు నిర్వహణ భత్యం.',
+20:'బాలికల జన్మ నమోదు, లింగ ఎంపిక గర్భస్రావం నివారణ, విద్యా ప్రోత్సాహం.'
+}
+};
+
+// ============ SCHEMES DATA ============
+const schemes = [
+    { id:1, name:'PM Kisan Samman Nidhi', category:'farming', description:'Direct income support for all farmers with landholding', benefit:'₹6,000 per year', eligibility:'All farmers with landholding documents', apply:'pmkisan.gov.in', fullDetails:'Farmers receive ₹6000 annually in 3 installments of ₹2000 each directly to their bank account. No middlemen involved.' },
+    { id:2, name:'Ayushman Bharat PMJAY', category:'health', description:'World\'s largest health insurance scheme for poor families', benefit:'₹5 Lakh coverage/year', eligibility:'Poor and vulnerable families listed in SECC database', apply:'pmjay.gov.in', fullDetails:'Get free hospitalization up to ₹5 lakh per year. Covers 1500+ medical procedures at empanelled hospitals across India.' },
+    { id:3, name:'PM Awas Yojana', category:'housing', description:'Free pucca houses for homeless and BPL families', benefit:'Free house construction', eligibility:'BPL families without a pucca house in rural or urban areas', apply:'pmayg.nic.in', fullDetails:'Complete financial assistance for construction of a pucca house. Rural beneficiaries get ₹1.2 lakh, hilly areas ₹1.3 lakh.' },
+    { id:4, name:'National Scholarship Portal', category:'education', description:'One-stop portal for all central and state scholarships', benefit:'Up to ₹75,000 per year', eligibility:'Students from Class 1 to PhD with family income below ₹8 lakh', apply:'scholarships.gov.in', fullDetails:'Covers pre-matric, post-matric and merit scholarships for SC, ST, OBC, minority and general category students.' },
+    { id:5, name:'PM MUDRA Yojana', category:'business', description:'Business loans without collateral for small entrepreneurs', benefit:'Loan up to ₹10 Lakh', eligibility:'Any Indian citizen with a non-farm business plan', apply:'mudra.org.in', fullDetails:'Shishu: up to ₹50K, Kishor: ₹50K to ₹5L, Tarun: ₹5L to ₹10L. No collateral required. Apply at any bank or MFI.' },
+    { id:6, name:'Sukanya Samriddhi Yojana', category:'women', description:'High-interest savings account for girl child education', benefit:'8.2% interest rate', eligibility:'Parents of girl child below 10 years of age', apply:'Any post office or bank', fullDetails:'Open with minimum ₹250. Deposit up to ₹1.5 lakh per year. Matures when girl turns 21. Full tax exemption under 80C.' },
+    { id:7, name:'PM Ujjwala Yojana', category:'women', description:'Free LPG gas connection for BPL women', benefit:'Free LPG connection + first refill', eligibility:'Women from BPL households without existing LPG connection', apply:'Nearest LPG distributor', fullDetails:'Free LPG connection with first cylinder and stove. Reduces health hazards from cooking on chulha or firewood.' },
+    { id:8, name:'Atal Pension Yojana', category:'business', description:'Guaranteed pension for unorganised sector workers', benefit:'₹1,000 to ₹5,000 monthly pension', eligibility:'Indian citizens aged 18-40 years with bank account', apply:'Any nationalized bank', fullDetails:'Contribute small amounts now and get guaranteed pension of ₹1000-5000 per month after age 60. Government co-contributes 50%.' },
+    { id:9, name:'Stand Up India', category:'business', description:'Large loans for SC/ST and women entrepreneurs', benefit:'Loan ₹10 Lakh to ₹1 Crore', eligibility:'SC, ST or women entrepreneurs setting up greenfield enterprise', apply:'Any scheduled commercial bank', fullDetails:'Composite loan for setting up new manufacturing, trading or service sector enterprise. Repayment in 7 years.' },
+    { id:10, name:'PM Fasal Bima Yojana', category:'farming', description:'Comprehensive crop insurance against natural calamities', benefit:'Full crop insurance coverage', eligibility:'All farmers including sharecroppers growing notified crops', apply:'Nearest bank or CSC centre', fullDetails:'Covers loss due to drought, flood, cyclone, hailstorm. Premium: 2% for Kharif, 1.5% for Rabi crops. Balance paid by government.' },
+    { id:11, name:'Kisan Credit Card', category:'farming', description:'Flexible credit for all farm needs at low interest', benefit:'Credit up to ₹3 Lakh', eligibility:'Farmers, fishermen and animal husbandry workers with land records', apply:'Any nationalized bank with land documents', fullDetails:'Revolving credit for seeds, fertilizers, pesticides and equipment. Interest rate 4% after government subsidy.' },
+    { id:12, name:'PMKVY Skill Development', category:'education', description:'Free skill training with job placement guarantee', benefit:'Free training + ₹8,000 reward', eligibility:'Indian youth aged 15-45 years, school dropouts preferred', apply:'pmkvyofficial.org', fullDetails:'Industry-recognized certification in 300+ skills. Free residential training with accommodation. Placement assistance provided.' },
+    { id:13, name:'Startup India Scheme', category:'business', description:'Comprehensive support for new startups', benefit:'Tax exemption + funding access', eligibility:'Startups registered in India less than 10 years old', apply:'startupindia.gov.in', fullDetails:'3-year income tax exemption, fast patent processing at 80% discount, ₹10,000 crore fund of funds access.' },
+    { id:14, name:'MGNREGA', category:'farming', description:'100 days guaranteed wage employment for rural families', benefit:'100 days employment at minimum wage', eligibility:'Adult members of rural households willing to do unskilled work', apply:'Gram Panchayat office with job card', fullDetails:'Legal guarantee of 100 days employment at ₹220-374 per day depending on state. Work must be provided within 15 days of application.' },
+    { id:15, name:'PM Jan Dhan Yojana', category:'business', description:'Zero balance bank account with insurance benefits', benefit:'Free account + ₹2 Lakh insurance', eligibility:'Any Indian citizen without a bank account', apply:'Any bank branch with Aadhaar card', fullDetails:'Zero balance account, RuPay debit card, ₹2L accident insurance, ₹30K life cover, ₹10K overdraft facility after 6 months.' },
+    { id:16, name:'PM Suraksha Bima Yojana', category:'health', description:'Accident insurance for bank account holders', benefit:'₹2 Lakh accident cover', eligibility:'Bank account holders aged 18-70 years', apply:'Your bank branch', fullDetails:'₹2 lakh for accidental death or full disability. ₹1 lakh for partial disability. Premium just ₹20 per year — cheapest insurance in India.' },
+    { id:17, name:'PM Jeevan Jyoti Bima', category:'health', description:'Affordable life insurance for all', benefit:'₹2 Lakh life cover', eligibility:'Bank account holders aged 18-50 years', apply:'Your bank branch', fullDetails:'₹2 lakh paid to family on death of policyholder. Premium ₹436 per year — auto-debited from bank account every June.' },
+    { id:18, name:'Pradhan Mantri Matru Vandana', category:'women', description:'Cash benefit for pregnant and lactating mothers', benefit:'₹5,000 in 3 installments', eligibility:'Pregnant women and lactating mothers for first living child', apply:'Nearest Anganwadi centre', fullDetails:'₹1000 on early registration, ₹2000 after 6 months pregnancy, ₹2000 after child birth and first vaccination.' },
+    { id:19, name:'Post Matric Scholarship SC', category:'education', description:'Full scholarship for SC students in Class 11 and above', benefit:'Full tuition + maintenance allowance', eligibility:'SC students in Class 11 and above with family income below ₹2.5 lakh', apply:'scholarships.gov.in', fullDetails:'Covers full tuition fee, exam fee and maintenance allowance. Available for all courses including professional degrees.' },
+    { id:20, name:'Beti Bachao Beti Padhao', category:'women', description:'Scheme to protect and educate the girl child', benefit:'Education support + awareness', eligibility:'All families with girl child, especially in low sex-ratio districts', apply:'District Collector office', fullDetails:'Ensures girl child registration at birth, prevents sex-selective abortion, promotes girl child education and welfare.' },
+];
+
+// ============ QUIZ QUESTIONS ============
+const quizQuestions = [
+    { question:'Which state are you from?', options:['Andhra Pradesh','Bihar','Gujarat','Haryana','Karnataka','Maharashtra','Tamil Nadu','Uttar Pradesh','Other'], key:'state' },
+    { question:'What is your main occupation?', options:['Farmer','Student','Business Owner','Daily Wage Worker','Government Employee','Homemaker','Other'], key:'occupation' },
+    { question:'What is your annual family income?', options:['Below ₹1 Lakh','₹1 - 3 Lakh','₹3 - 8 Lakh','Above ₹8 Lakh'], key:'income' },
+    { question:'What is your age?', options:['Below 18','18 - 30','31 - 45','46 - 60','Above 60'], key:'age' },
+    { question:'What is your category?', options:['General','OBC','SC','ST'], key:'category' },
+    { question:'What is your gender?', options:['Male','Female','Other'], key:'gender' },
+];
+
+// ============ STATE ============
+let currentLanguage = localStorage.getItem('lang') || 'en';
+let quizAnswers = {};
+let currentQuizQuestion = 0;
+let recognition = null;
+let isListening = false;
+let chartsInitialized = false;
+
+// ============ APPLY TRANSLATIONS ============
+function applyTranslations(lang) {
+    const t = translations[lang] || translations.en;
+
+    // Update all data-i18n text elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key] !== undefined) {
+            el.textContent = t[key];
+        }
+    });
+
+    // Update chip text (chips send their own text as message)
+    document.querySelectorAll('[data-i18n-chip]').forEach(el => {
+        const key = el.getAttribute('data-i18n-chip');
+        if (t[key] !== undefined) {
+            el.textContent = t[key];
+        }
+    });
+
+    // Update placeholders
+    const chatInput = document.getElementById('chatInput');
+    if (chatInput && t.chat_placeholder) chatInput.setAttribute('placeholder', t.chat_placeholder);
+    const schemeSearch = document.getElementById('schemeSearch');
+    if (schemeSearch && t.search_placeholder) schemeSearch.setAttribute('placeholder', t.search_placeholder);
+
+    // Update welcome message (innerHTML for bold tags)
+    const welcomeMsg = document.getElementById('welcomeMsg');
+    if (welcomeMsg && t.welcome_msg) welcomeMsg.innerHTML = t.welcome_msg;
+
+    // Update document language
+    document.documentElement.lang = lang;
+
+    updateApiKeyBanner();
+}
+
+// ============ INIT ============
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('languageSelector').value = currentLanguage;
+    applyTranslations(currentLanguage);
+    renderSchemes();
+    initializeQuiz();
+    animateHomeStats();
+    initSpeechRecognition();
+    updateApiKeyBanner();
+});
+
+function initSpeechRecognition() {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return;
+    recognition = new SR();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.onstart = () => { isListening = true; document.getElementById('voiceBtn').classList.add('listening'); document.getElementById('voiceBtn').textContent = '🔴'; };
+    recognition.onresult = (e) => { const t = e.results[0][0].transcript; document.getElementById('chatInput').value = t; toggleSendBtn(); };
+    recognition.onend = () => { isListening = false; document.getElementById('voiceBtn').classList.remove('listening'); document.getElementById('voiceBtn').textContent = '🎤'; };
+    recognition.onerror = () => { isListening = false; document.getElementById('voiceBtn').classList.remove('listening'); document.getElementById('voiceBtn').textContent = '🎤'; };
+}
+
+// ============ NAVIGATION ============
+function navigateTo(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    document.getElementById(page).classList.add('active');
+    const links = document.querySelectorAll('.nav-link');
+    const pageNames = ['home','chat','schemes','eligibility','letter','impact'];
+    const idx = pageNames.indexOf(page);
+    if (idx >= 0) links[idx].classList.add('active');
+    window.scrollTo(0,0);
+    closeMenu();
+    if (page === 'impact' && !chartsInitialized) { setTimeout(() => { renderCharts(); chartsInitialized = true; }, 300); animateImpactStats(); }
+    if (page === 'schemes') renderSchemes();
+}
+
+function closeMenu() { document.getElementById('navLinks').classList.remove('active'); }
+function toggleMenu() { document.getElementById('navLinks').classList.toggle('active'); }
+
+// ============ LANGUAGE ============
+function changeLanguage(lang) {
+    currentLanguage = lang;
+    localStorage.setItem('lang', lang);
+    applyTranslations(lang);
+    const langMap = { en:'en-IN', hi:'hi-IN', mr:'mr-IN', ta:'ta-IN', te:'te-IN' };
+    if (recognition) recognition.lang = langMap[lang] || 'en-IN';
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    renderSchemes();
+    updateApiKeyBanner();
+}
+
+// ============ GEMINI AI ============
+async function callGeminiAI(userMessage) {
+    if (!isGeminiKeyConfigured()) {
+        throw new Error('No Gemini API key configured');
+    }
+
+    const langNames = { en:'English', hi:'Hindi', mr:'Marathi', ta:'Tamil', te:'Telugu' };
+    const langName = langNames[currentLanguage] || 'English';
+
+    const prompt = `You are BharatVoice AI, a helpful assistant that explains Indian government schemes, scholarships and benefits in simple language.
+
+IMPORTANT: Always respond in ${langName} language only. If ${langName} is Hindi, write in Hindi (Devanagari). If Marathi, write in Marathi. If Tamil, write in Tamil. If Telugu, write in Telugu. If English, write in English.
+
+Keep responses short (4-5 lines). Include scheme name, eligibility, benefit amount and how to apply when relevant. Be warm and helpful.
+
+User question: ${userMessage}`;
+
+    const res = await fetch(
+        'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=' + encodeURIComponent(GEMINI_API_KEY),
+        {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }]
+            })
+        }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        const message = data.error?.message || `HTTP ${res.status} ${res.statusText}`;
+        throw new Error(message);
+    }
+
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+}
+
+// ============ CHAT ============
+function toggleSendBtn() {
+    const v = document.getElementById('chatInput').value.trim();
+    document.getElementById('sendBtn').disabled = v.length === 0;
+}
+
+function handleChatKeyPress(e) { if (e.key === 'Enter') sendMessage(); }
+
+function toggleVoiceRecognition() {
+    if (!recognition) { alert('Voice not supported in this browser. Try Chrome.'); return; }
+    if (isListening) { recognition.stop(); } else { recognition.start(); }
+}
+
+function sendSuggestedChip(el) {
+    sendMessage(el.textContent);
+}
+
+function getApiErrorNotice(error) {
+    const message = (error?.message || '').toLowerCase();
+    if (message.includes('no gemini api key configured')) {
+        return getApiText('noKeyFallback');
+    }
+    if (message.includes('quota') || message.includes('limit') || message.includes('daily limit') || message.includes('quota exceeded')) {
+        return getApiText('apiFailedFallback').replace('{error}', 'Quota exceeded');
+    }
+    if (message.includes('invalid') || message.includes('unauthorized') || message.includes('forbidden') || message.includes('permission')) {
+        return getApiText('apiFailedFallback').replace('{error}', 'Invalid API key or permissions');
+    }
+    return getApiText('apiFailedFallback').replace('{error}', error.message || 'API error');
+}
+
+async function sendMessage(message) {
+    const input = document.getElementById('chatInput');
+    const msg = message || input.value.trim();
+    if (!msg) return;
+    input.value = '';
+    document.getElementById('sendBtn').disabled = true;
+    addUserMessage(msg);
+    showTyping();
+
+    try {
+        const text = await callGeminiAI(msg);
+        removeTyping();
+        addAIMessage(text || getApiText('apiFailedFallback').replace('{error}', 'Empty Gemini response'));
+    } catch (error) {
+        removeTyping();
+        console.error('Gemini error:', error);
+        addAIMessage(getApiErrorNotice(error));
+        addAIMessage(generateAIResponse(msg));
+    }
+}
+
+function addUserMessage(text) {
+    const c = document.getElementById('messagesContainer');
+    const now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    const d = document.createElement('div');
+    d.className = 'message user';
+    d.innerHTML = `<div class="message-bubble" style="max-width:70%"><div>${escHtml(text)}</div><div style="font-size:0.75rem;opacity:0.7;margin-top:4px">${now}</div></div>`;
+    c.appendChild(d);
+    c.scrollTop = c.scrollHeight;
+}
+
+function addAIMessage(text) {
+    const c = document.getElementById('messagesContainer');
+    const now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    const d = document.createElement('div');
+    d.className = 'message ai';
+    d.innerHTML = `<div class="ai-icon">🤖</div><div class="message-content"><div class="message-bubble"><div class="ai-response-text">${formatAIText(text)}</div><button class="speaker-btn" onclick="speakText(this)">🔊</button></div><div class="message-time">${now}</div></div>`;
+    c.appendChild(d);
+    c.scrollTop = c.scrollHeight;
+}
+
+function showTyping() {
+    const c = document.getElementById('messagesContainer');
+    const d = document.createElement('div');
+    d.className = 'message ai'; d.id = 'typingIndicator';
+    d.innerHTML = `<div class="ai-icon">🤖</div><div class="message-bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+    c.appendChild(d);
+    c.scrollTop = c.scrollHeight;
+}
+
+function removeTyping() {
+    const t = document.getElementById('typingIndicator');
+    if (t) t.remove();
+}
+
+function formatAIText(text) {
+    return text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\n/g, '<br>');
+}
+
+function escHtml(text) {
+    const d = document.createElement('div');
+    d.textContent = text;
+    return d.innerHTML;
+}
+
+// Fallback keyword-based AI (used when no Gemini key or API fails)
+function generateAIResponse(msg) {
+    const m = msg.toLowerCase();
+    for (let s of schemes) {
+        const sn = s.name.toLowerCase();
+        const keywords = sn.split(' ');
+        const match = keywords.some(k => k.length > 3 && m.includes(k));
+        if (match || m.includes(sn)) {
+            return `**${s.name}**\n\n📋 **Eligibility:** ${s.eligibility}\n\n💰 **Benefit:** ${s.benefit}\n\n📖 **About:** ${s.fullDetails}\n\n🔗 **Apply at:** ${s.apply}`;
+        }
+    }
+    if (m.includes('farm') || m.includes('kisan') || m.includes('crop')) {
+        const fs = schemes.filter(s => s.category === 'farming');
+        return `Found **${fs.length} farming schemes** for you:\n\n${fs.map(s=>`• **${s.name}** — ${s.benefit}`).join('\n')}\n\nAsk about any specific scheme for full details!`;
+    }
+    if (m.includes('student') || m.includes('scholarship') || m.includes('education') || m.includes('study') || m.includes('shiksha') || m.includes('padhai')) {
+        const es = schemes.filter(s => s.category === 'education');
+        return `Found **${es.length} education schemes**:\n\n${es.map(s=>`• **${s.name}** — ${s.benefit}`).join('\n')}\n\nAsk about any scheme for complete details!`;
+    }
+    if (m.includes('health') || m.includes('medical') || m.includes('hospital') || m.includes('swasth') || m.includes('bimari')) {
+        const hs = schemes.filter(s => s.category === 'health');
+        return `Found **${hs.length} health schemes**:\n\n${hs.map(s=>`• **${s.name}** — ${s.benefit}`).join('\n')}`;
+    }
+    if (m.includes('business') || m.includes('loan') || m.includes('mudra') || m.includes('startup') || m.includes('vyapar')) {
+        const bs = schemes.filter(s => s.category === 'business');
+        return `Found **${bs.length} business schemes**:\n\n${bs.map(s=>`• **${s.name}** — ${s.benefit}`).join('\n')}`;
+    }
+    if (m.includes('woman') || m.includes('girl') || m.includes('women') || m.includes('beti') || m.includes('mahila') || m.includes('ladki')) {
+        const ws = schemes.filter(s => s.category === 'women');
+        return `Found **${ws.length} schemes for women**:\n\n${ws.map(s=>`• **${s.name}** — ${s.benefit}`).join('\n')}`;
+    }
+    if (m.includes('house') || m.includes('housing') || m.includes('awas') || m.includes('ghar')) {
+        const hs = schemes.filter(s => s.category === 'housing');
+        return `Found **${hs.length} housing scheme(s)**:\n\n${hs.map(s=>`• **${s.name}** — ${s.benefit}`).join('\n')}`;
+    }
+    return `Namaste! 🙏 Ask me about any government scheme.\n\nTry:\n• "What is PM Kisan?"\n• "Scholarships for students"\n• "Health insurance schemes"\n• "Business loans"\n• "Women schemes"`;
+}
+
+function speakText(btn) {
+    if (!window.speechSynthesis) return;
+    const text = btn.closest('.message-bubble').querySelector('.ai-response-text').textContent;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    const langMap = { en:'en-IN', hi:'hi-IN', mr:'mr-IN', ta:'ta-IN', te:'te-IN' };
+    u.lang = langMap[currentLanguage] || 'en-IN';
+    u.rate = 0.9;
+    btn.textContent = '⏸️';
+    u.onend = () => { btn.textContent = '🔊'; };
+    window.speechSynthesis.speak(u);
+}
+
+// ============ SCHEMES PAGE ============
+function renderSchemes(filter) {
+    const grid = document.getElementById('schemesGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    const t = translations[currentLanguage] || translations.en;
+    const descLang = schemeDescriptions[currentLanguage] || schemeDescriptions.en;
+    const catMap = {
+        farming: t.cat_farming || 'FARMING',
+        education: t.cat_education || 'EDUCATION',
+        health: t.cat_health || 'HEALTH',
+        business: t.cat_business || 'BUSINESS',
+        women: t.cat_women || 'WOMEN',
+        housing: t.cat_housing || 'HOUSING'
+    };
+    const list = filter ? schemes.filter(s => s.category === filter) : schemes;
+    list.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'scheme-card';
+        card.setAttribute('data-category', s.category);
+        card.innerHTML = `
+            <div class="scheme-category category-${s.category}">${catMap[s.category] || s.category.toUpperCase()}</div>
+            <div class="scheme-name">${s.name}</div>
+            <div class="scheme-description">${descLang[s.id] || s.description}</div>
+            <div class="scheme-benefit">${s.benefit}</div>
+            <div class="scheme-actions">
+                <button class="btn-small btn-outline" onclick="openSchemeModal(${s.id})">${t.btn_know_more || 'Know More'}</button>
+                <button class="btn-small btn-solid" onclick="navigateTo('eligibility')">${t.btn_check_qualify || t.btn_qualify || 'Check Eligibility'}</button>
+            </div>`;
+        grid.appendChild(card);
+    });
+}
+
+function filterSchemes() {
+    const term = document.getElementById('schemeSearch').value.toLowerCase();
+    document.querySelectorAll('.scheme-card').forEach(card => {
+        const name = card.querySelector('.scheme-name').textContent.toLowerCase();
+        const desc = card.querySelector('.scheme-description').textContent.toLowerCase();
+        card.style.display = (name.includes(term) || desc.includes(term)) ? '' : 'none';
+    });
+}
+
+function filterByCategory(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    if (cat === 'all') { renderSchemes(); } else { renderSchemes(cat); }
+}
+
+function openSchemeModal(id) {
+    const s = schemes.find(x => x.id === id);
+    const t = translations[currentLanguage] || translations.en;
+    const full = FULL[currentLanguage] || FULL.en;
+    const catKey = 'cat_' + s.category;
+    const catLabel = t[catKey] || s.category.toUpperCase();
+    document.getElementById('schemeModalContent').innerHTML = `
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <h2>${s.name}</h2>
+        <div class="scheme-category category-${s.category}" style="margin-bottom:1rem">${catLabel}</div>
+        <h3>${t.modal_about || 'About This Scheme'}</h3>
+        <p>${full[s.id] || s.fullDetails || ''}</p>
+        <h3>${t.modal_who || 'Who Can Apply'}</h3>
+        <p>${s.eligibility}</p>
+        <h3>${t.modal_get || 'What You Get'}</h3>
+        <p style="font-size:1.1rem;font-weight:600;color:var(--success)">${s.benefit}</p>
+        <h3>${t.modal_docs || 'Documents Required'}</h3>
+        <ul>
+            <li>${t.doc1 || 'Aadhaar Card'}</li>
+            <li>${t.doc2 || 'Bank Passbook'}</li>
+            <li>${t.doc3 || 'Income Certificate'}</li>
+            <li>${t.doc4 || 'Land Documents (if needed)'}</li>
+            <li>${t.doc5 || 'Caste Certificate (if needed)'}</li>
+        </ul>
+        <div class="modal-actions">
+            <a href="https://${s.apply}" target="_blank" class="btn btn-primary">${t.modal_apply || 'Apply Now'}</a>
+            <button class="btn btn-secondary" onclick="closeModal()">${t.modal_close || 'Close'}</button>
+        </div>`;
+    document.getElementById('schemeModal').classList.add('active');
+}
+
+function closeModal() { document.getElementById('schemeModal').classList.remove('active'); }
+function closeModalOutside(e) { if (e.target === document.getElementById('schemeModal')) closeModal(); }
+
+// ============ QUIZ ============
+function initializeQuiz() {
+    const c = document.getElementById('quizContainer');
+    if (!c) return;
+    c.innerHTML = '';
+    quizQuestions.forEach((q, i) => {
+        const d = document.createElement('div');
+        d.className = `quiz-question ${i === 0 ? 'active' : ''}`;
+        d.id = `q${i}`;
+        d.innerHTML = `
+            <div class="question-text">Question ${i+1} of ${quizQuestions.length}: ${q.question}</div>
+            <div class="options-grid">
+                ${q.options.map(o => `<div class="option-card" onclick="selectOption(${i},'${o}',this)">${o}</div>`).join('')}
+            </div>
+            <div class="quiz-buttons">
+                <button class="btn-quiz btn-quiz-back" onclick="prevQuizQuestion()" ${i===0?'style="visibility:hidden"':''}>← Back</button>
+                <button class="btn-quiz btn-quiz-next" onclick="nextQuizQuestion()" id="nextBtn${i}">${i===quizQuestions.length-1?'See Results →':'Next →'}</button>
+            </div>`;
+        c.appendChild(d);
+    });
+    updateProgress();
+}
+
+function selectOption(qi, option, el) {
+    document.querySelectorAll(`#q${qi} .option-card`).forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    quizAnswers[quizQuestions[qi].key] = option;
+}
+
+function nextQuizQuestion() {
+    if (!quizAnswers[quizQuestions[currentQuizQuestion].key]) { alert('Please select an option!'); return; }
+    if (currentQuizQuestion < quizQuestions.length - 1) {
+        document.getElementById(`q${currentQuizQuestion}`).classList.remove('active');
+        currentQuizQuestion++;
+        document.getElementById(`q${currentQuizQuestion}`).classList.add('active');
+        updateProgress();
+    } else { showResults(); }
+}
+
+function prevQuizQuestion() {
+    if (currentQuizQuestion > 0) {
+        document.getElementById(`q${currentQuizQuestion}`).classList.remove('active');
+        currentQuizQuestion--;
+        document.getElementById(`q${currentQuizQuestion}`).classList.add('active');
+        updateProgress();
+    }
+}
+
+function updateProgress() {
+    const pct = ((currentQuizQuestion + 1) / quizQuestions.length) * 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function showResults() {
+    document.getElementById('quizContainer').style.display = 'none';
+    const rc = document.getElementById('resultsContainer');
+    rc.classList.add('active');
+    const matches = calculateMatches();
+    document.getElementById('qualifyCount').textContent = `${matches.length} Schemes!`;
+    let total = 0;
+    matches.forEach(m => { const n = parseInt((m.benefit.match(/[\d,]+/) || ['0'])[0].replace(',','')); total += n; });
+    document.getElementById('totalBenefitAmount').textContent = `₹${total.toLocaleString()} Potential Annual Benefit`;
+    const rd = document.getElementById('resultsMatches');
+    if (matches.length === 0) {
+        rd.innerHTML = '<p style="text-align:center;color:var(--text-light)">No exact matches found. Try browsing all schemes!</p>';
+    } else {
+        rd.innerHTML = matches.map(s => `
+            <div class="match-card">
+                <div class="match-scheme-name">${s.name}</div>
+                <div class="match-benefit">${s.benefit}</div>
+                <div class="match-reason">${s.description}</div>
+                <a href="https://${s.apply}" target="_blank" class="btn btn-primary" style="display:block;text-align:center;text-decoration:none;margin-top:0.5rem">Apply Now →</a>
+            </div>`).join('');
+    }
+}
+
+function calculateMatches() {
+    const occ = quizAnswers.occupation || '';
+    const cat = quizAnswers.category || '';
+    const inc = quizAnswers.income || '';
+    const gen = quizAnswers.gender || '';
+    return schemes.filter(s => {
+        if (occ === 'Farmer' && s.category === 'farming') return true;
+        if (occ === 'Student' && s.category === 'education') return true;
+        if (occ === 'Business Owner' && s.category === 'business') return true;
+        if (gen === 'Female' && s.category === 'women') return true;
+        if ((cat === 'SC' || cat === 'ST') && (s.name.includes('SC') || s.name.includes('Stand Up'))) return true;
+        if (inc === 'Below ₹1 Lakh' && (s.category === 'health' || s.category === 'housing')) return true;
+        if (occ === 'Homemaker' && s.category === 'women') return true;
+        if (occ === 'Daily Wage Worker' && (s.name.includes('MGNREGA') || s.name.includes('Atal'))) return true;
+        return false;
+    });
+}
+
+function retakeQuiz() {
+    quizAnswers = {}; currentQuizQuestion = 0;
+    document.getElementById('quizContainer').style.display = 'block';
+    document.getElementById('resultsContainer').classList.remove('active');
+    initializeQuiz();
+}
+
+// ============ LETTER GENERATOR ============
+function generateLetter() {
+    const name = document.getElementById('letterFullName').value.trim();
+    const father = document.getElementById('letterFatherName').value.trim();
+    const village = document.getElementById('letterVillage').value.trim();
+    const district = document.getElementById('letterDistrict').value.trim();
+    const state = document.getElementById('letterState').value;
+    const pin = document.getElementById('letterPin').value.trim();
+    const aadhaar = document.getElementById('letterAadhaar').value.trim();
+    const scheme = document.getElementById('letterScheme').value;
+    const purpose = document.getElementById('letterPurpose').value.trim();
+    if (!name || !father || !village || !district || !state || !scheme) { alert('Please fill all required fields marked with *'); return; }
+    const date = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' });
+    const letter = `To,
+The Authorized Officer / Block Development Officer
+${district} District Administration
+${state}
+
+Date: ${date}
+
+Subject: Application for enrollment under ${scheme}
+
+Respected Sir/Madam,
+
+I, ${name}, son/daughter/wife of ${father}, resident of Village/City: ${village}, District: ${district}, State: ${state}${pin ? ', PIN: '+pin : ''}, hereby request you to consider my application for the ${scheme} scheme.
+
+I fulfill all the eligibility criteria for this scheme and wish to avail its benefits for the purpose of: ${purpose || 'improving my livelihood and family welfare'}.
+
+I hereby declare that all information provided is true and correct. I request you to kindly process my application and provide the benefits at the earliest.
+
+I have attached all required documents including:
+1. Aadhaar Card (Last 4 digits: ${aadhaar || 'XXXX'})
+2. Bank account passbook
+3. Income/Residence certificate
+4. Any other required documents
+
+Thanking you,
+Yours faithfully,
+
+${name}
+Village: ${village}, Dist: ${district}, ${state}
+Date: ${date}
+
+-------------------------------------------
+हिंदी आवेदन पत्र / Hindi Application
+-------------------------------------------
+
+सेवा में,
+अधिकृत अधिकारी / खंड विकास अधिकारी
+${district} जिला प्रशासन, ${state}
+
+दिनांक: ${date}
+
+विषय: ${scheme} योजना के लिए आवेदन
+
+महोदय/महोदया,
+
+मैं ${name}, पुत्र/पुत्री/पत्नी: ${father}, निवासी: ${village}, जिला: ${district}, राज्य: ${state}${pin ? ', पिन: '+pin : ''}, ${scheme} योजना के लाभ हेतु यह आवेदन पत्र प्रस्तुत करता/करती हूँ।
+
+मैं इस योजना की सभी पात्रता शर्तें पूरी करता/करती हूँ। मेरा उद्देश्य: ${purpose || 'अपने परिवार की आजीविका में सुधार करना'} है।
+
+मैं घोषणा करता/करती हूँ कि दी गई सभी जानकारी सत्य है। कृपया मेरे आवेदन पर शीघ्र विचार करें।
+
+सधन्यवाद,
+${name}
+आधार अंतिम 4 अंक: ${aadhaar || 'XXXX'}
+दिनांक: ${date}`;
+
+    document.getElementById('letterContent').textContent = letter;
+    document.getElementById('letterOutput').classList.add('active');
+    document.getElementById('letterOutput').scrollIntoView({ behavior: 'smooth' });
+}
+
+function printLetter() { window.print(); }
+function copyToClipboard() {
+    const text = document.getElementById('letterContent').textContent;
+    navigator.clipboard.writeText(text).then(() => alert('Letter copied!')).catch(() => alert('Please select and copy manually.'));
+}
+
+// ============ IMPACT PAGE ============
+function animateHomeStats() {
+    animCount(document.getElementById('stat1'), 4000, false, '+');
+    animCount(document.getElementById('stat2'), 20, false, '+');
+    animCount(document.getElementById('stat3'), 10000, false, '+');
+    animCount(document.getElementById('stat4'), 50, false, ' Cr');
+}
+
+function animateImpactStats() {
+    animCount(document.getElementById('imp1'), 15847, false, '');
+    animCount(document.getElementById('imp2'), 8234, false, '');
+    animCount(document.getElementById('imp3'), 2156, false, '');
+    animCount(document.getElementById('imp4'), 42, true, ' Cr');
+    renderActivityFeed();
+}
+
+function animCount(el, target, isMoney, suffix) {
+    if (!el) return;
+    let current = 0;
+    const step = target / 60;
+    const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = (isMoney ? '₹' : '') + Math.floor(current).toLocaleString() + suffix;
+        if (current >= target) clearInterval(timer);
+    }, 25);
+}
+
+function renderCharts() {
+    try {
+        new Chart(document.getElementById('topSchemesChart'), { type:'bar', data:{ labels:['PM Kisan','Ayushman Bharat','MUDRA','PM Awas','Scholarship'], datasets:[{ label:'Searches', data:[2500,2000,1800,1500,1200], backgroundColor:'rgba(27,107,58,0.7)', borderColor:'#1B6B3A', borderWidth:1 }] }, options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true } } } });
+        new Chart(document.getElementById('languageChart'), { type:'doughnut', data:{ labels:['Hindi','English','Marathi','Tamil','Telugu'], datasets:[{ data:[35,25,20,12,8], backgroundColor:['#FF9933','#1B6B3A','#28A745','#007BFF','#6F42C1'] }] }, options:{ responsive:true, plugins:{ legend:{ position:'bottom' } } } });
+        const days = Array.from({length:30},(_,i)=>i+1);
+        new Chart(document.getElementById('usageChart'), { type:'line', data:{ labels:days.map(d=>`Day ${d}`), datasets:[{ label:'Daily Users', data:days.map(()=>Math.floor(Math.random()*500)+200), borderColor:'#1B6B3A', backgroundColor:'rgba(27,107,58,0.1)', tension:0.4, fill:true }] }, options:{ responsive:true, scales:{ y:{ beginAtZero:true } } } });
+    } catch(e) { console.log('Chart error:', e); }
+}
+
+function renderActivityFeed() {
+    const acts = [
+        '🌾 Farmer from Maharashtra discovered PM Kisan benefits',
+        '📚 Student from Bihar found ₹75,000 scholarship',
+        '👩 Woman entrepreneur in Gujarat applied for MUDRA loan',
+        '🏥 Family of 5 from UP enrolled in Ayushman Bharat',
+        '💼 Youth from Tamil Nadu registered for PMKVY training',
+        '🍳 BPL household in Rajasthan got Ujjwala LPG connection',
+        '👧 Couple in MP opened Sukanya Samriddhi account',
+        '🚀 Startup founder in Bengaluru applied for Stand Up India',
+        '🌾 Farmer in Punjab purchased Fasal Bima crop insurance',
+        '🎓 Student in Delhi received first scholarship installment'
+    ];
+    document.getElementById('activityFeed').innerHTML = acts.map(a=>`<div class="activity-item">${a}</div>`).join('');
+}
+</script>
+</body>
+</html>
